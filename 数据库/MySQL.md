@@ -36,3 +36,22 @@
 
   ``` alter table 表名  modify column 字段名 var(8)```
 
+
+
+# 云服务器安装MySQL
+
+- 登陆云服务器
+
+  > ```ssh root@47.96.141.152  ```
+
+- 检查是否带有MySQL
+
+  > ```sudo netstat -tap | grep mysql```
+  >
+  > 没显示，则未安装
+
+- 安装MySQL
+
+  > 先更新仓库
+  >
+  > ```
