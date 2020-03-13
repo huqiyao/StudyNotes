@@ -27,6 +27,16 @@ console.log(this); // {age:21}
 
 
 
+## Window 和 window 
 
-## Window 和 window
 
+
+
+
+## substring 和 substr
+
+- substr(start [, length])
+  - length 为0或者负数，返回空字符串
+- substring(start [, end])
+  - 使用start、end中的较小值作为起始点
+  - start 或 end 为 NaN / 负数时，将其替换成 0
