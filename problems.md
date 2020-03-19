@@ -26,7 +26,6 @@ console.log(this); // {age:21}
 <div align='center'><img src='图片资料/node中的this.png'></div>
 
 
-
 ## Window 和 window 
 
 
@@ -40,3 +39,8 @@ console.log(this); // {age:21}
 - substring(start [, end])
   - 使用start、end中的较小值作为起始点
   - start 或 end 为 NaN / 负数时，将其替换成 0
+
+
+
+## console.log() 和 console.dir()
+
