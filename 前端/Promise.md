@@ -21,3 +21,14 @@ Promise 是异步编程的一种解决方案，比传统的异步解决方案【
 ## Promise 如何使用？
 
 > - 初始化一个Promise对象。可以通过 ```new Promise(fn)``` 或 ```Promise.resolve(fn)``` 方法
+
+
+
+
+
+## Promise源码
+
+```javascript
+
+```
+
