@@ -29,6 +29,19 @@ Promise 是异步编程的一种解决方案，比传统的异步解决方案【
 ## Promise源码
 
 ```javascript
-
+const PENDING = 'pending';
+const RESOLVED = 'resolved';
+const REJECTED = 'rejected';
+function Promise = (executor){
+    let self = this;
+    self.onFulfiled = [];
+    self.onRejected = [];
+    self.status = PENDING;
+    function resolve(value){
+        if(self.status == PENDING){
+            
+        }
+    }
+}
 ```
 
