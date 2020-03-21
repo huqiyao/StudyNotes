@@ -37,11 +37,16 @@ function Promise = (executor){
     self.onFulfiled = [];
     self.onRejected = [];
     self.status = PENDING;
+    self.value = undefined;
+    self.reason = undefined;
     function resolve(value){
         if(self.status == PENDING){
-            
+            self.status = RESOLVED;
+            self.value = value;
+            self.onFulfiled.forEach(fn=>fn())
         }
     }
+    function 
 }
 ```
 

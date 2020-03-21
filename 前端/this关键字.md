@@ -43,5 +43,19 @@
 
 
 
-# this 与 箭头函数
+# 箭头函数
 
+
+
+- 使用
+
+```javascript
+x => x // function(x){return x}
+x => ({name: x}) // function(x){ return {name:x} } 省略()会报错
+```
+
+
+
+- this指向问题
+
+  > 箭头函数完全修复了`this`的指向，`this`总是指向词法作用域，也就是外层调用者`obj`
