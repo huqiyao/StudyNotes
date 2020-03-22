@@ -43,10 +43,72 @@ function Promise = (executor){
         if(self.status == PENDING){
             self.status = RESOLVED;
             self.value = value;
-            self.onFulfiled.forEach(fn=>fn())
+            self.onFulfiled.forEach(fn=>fn(self.value));
         }
     }
-    function 
+    function reject(reason){
+        if(self.status == PENDING){
+            self.status = REJECTED;
+            self.reason = reason;
+            self.onRejected.forEach(fn=>fn(self.reason));
+        }
+    }
+    try{
+        executor(resolve,reject);
+    }catch(e){
+        reject(e);
+    }
+}
+
+// 原型方法 then
+Promise.prototype.then = function(onFulfiled, onRejected){
+    onFulfiled = typeof onFulfiled == 'function' ? onFulfiled : value => value;
+    onRejected = typeof onRejected == 'function' ? onRejected : reason => {throw reason};
+    let self = this;
+    let promise2 = new Promise((resolve, reject)=>{
+        if(self.status == RESOLVED){
+            setTimeOut(()=>{
+                try{
+                	let x = onFulfiled(self.value);
+                    resolvePromise(x,promise2,resolve,reject); // 这个方法不会
+            	}catch(e){
+                	reject(e);
+            	}
+            });
+        }else if(self.status == REJECTED){
+            setTimeOut(()=>{
+                try{
+                	let x = onRejected(self.reason);
+                    resolvePromise(x,promise2,resolve,reject);
+            	}catch(e){
+                	reject(e);
+            	}
+            });
+        }else if(self.status == PENDING){
+            self.onFulfiled.push(setTimeOut(()=>{
+                try{
+                    let x = onFulfiled(self.value);
+                    resolvePromise(x,promise2,resolve,reject);
+                }catch(e){
+                    reject(e);
+                }
+            }));
+            self.onRejected.push(setTimeOut(()=>{
+                try{
+                    let x = onRejected(self.value);
+                    resolvePromise(x,promise2,resolve,reject);
+                }catch(e){
+                    reject(e);
+                }
+            }));
+        }
+    });
+    return promise2;
 }
 ```
 
+- 原型方法：```catch```	```then```	```finally```
+
+- 属性方法：```all```	```race```	```reject```	```resolve```
+
+  
