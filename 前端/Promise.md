@@ -1,6 +1,6 @@
 Promise 是异步编程的一种解决方案，比传统的异步解决方案【回调函数】和【事件】更合理、更强大。现已被 ES6 纳入进规范中
 
-
+# Promise面试题
 
 ## Promise 解决的痛点是什么？
 
@@ -20,13 +20,28 @@ Promise 是异步编程的一种解决方案，比传统的异步解决方案【
 
 ## Promise 如何使用？
 
-> - 初始化一个Promise对象。可以通过 ```new Promise(fn)``` 或 ```Promise.resolve(fn)``` 方法
+- 初始化一个Promise对象。可以通过 ```new Promise(fn)``` 或 ```Promise.resolve(fn)``` 方法
+- 
+
+
+
+## Promise 常用的方法有哪些？它们的作用是什么
+
+- catch，捕获前面的回调产生的错误的结果，并处理
+- then，为上一个异步操作返回的Promise对象或结果注册回调函数
+- race，使得多个异步任务同时进行，哪个任务最先执行完即返回其结果
+- all，使得多个异步任务同时进行，等所有任务都执行完才返回所有结果，如果有一个rejected了，就只返回这个rejected的结果
+- resolve，返回一个以 value 值解析后的 Promise 对象
+  - 如果 value 是 thenable，返回一个状态跟 thenable一样的Promise对象
+  - 如果 value 是 Promise对象，返回这个Promise对象
+  - 如果 value是其他值，以 value 值为成功状态返回一个Promise对象
+- reject，同上，只是状态不同
 
 
 
 
 
-## Promise源码
+# Promise源码
 
 ```javascript
 const PENDING = 'pending';
