@@ -120,3 +120,17 @@ console.dir(Foo)
 > 综上：这个是非匿名函数，自身有个内置属性```name = 函数名``` , 是不会被修改的
 >
 > 即使是匿名函数，也有内置属性name，只是```name = ''```，也是不能被修改的
+
+
+
+# 使用iView的Col、Input标签报错
+
+https://blog.csdn.net/weixin_38465623/article/details/85490353
+
+https://blog.csdn.net/jiaqingge/article/details/80498536
+
+
+
+# 管理员查看不到我的feature分支
+
+https://www.cnblogs.com/zhou-chao/p/7678899.html

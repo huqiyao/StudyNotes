@@ -2,7 +2,7 @@
 
 [参考资料](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow)
 
-<div align='center'><img src='图片资料/gitflow.png'/></div>
+<div align='center'><img src='../图片资料/gitflow.png'/></div>
 
 ## 创建develop分支
 
