@@ -134,3 +134,34 @@ https://blog.csdn.net/jiaqingge/article/details/80498536
 # 管理员查看不到我的feature分支
 
 https://www.cnblogs.com/zhou-chao/p/7678899.html
+
+
+
+# vue 的 v-on:input 事件到底是什么
+
+[参考答案](https://segmentfault.com/q/1010000009271217)
+
+
+
+# 安装窗口逃到屏幕外边了
+
+```Alt + space``` 进入移动状态
+
+
+
+# 用iview的Select组件，选了之后不回显问题
+
+```vue
+<Select v-model="ruleFormData[item.prop]"
+        :placeholder="item.placeholder"
+        v-if="item.type == 'multiSelect'">
+    <Option v-for="subitem in item.selectValue"
+            :key="subitem.value"
+            :value="subitem.value">
+    </Option>
+</Select>
+```
+
+改正：
+
+给 ```<Option>``` 加上 ```:label="subitem.label"```
