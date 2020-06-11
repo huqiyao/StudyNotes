@@ -187,3 +187,31 @@ HTML5 新的规定，是可以允许本地获取到跨域脚本的错误信息�
 </div>
 ```
 
+
+
+# powershell yarn报错
+
+[描述](https://blog.csdn.net/qq_45062261/article/details/100132489)
+
+
+
+# IDE目录显示问题
+
+https://www.cnblogs.com/eret9616/p/12099165.html
+
+
+
+# 文字换行
+
+hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh => 不换行
+
+哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈 => 换行
+
+
+
+# 除了第一次外，按钮点击两次后modal才出现
+
+
+
+# 文字溢到padding
+
