@@ -165,3 +165,53 @@ https://www.cnblogs.com/zhou-chao/p/7678899.html
 改正：
 
 给 ```<Option>``` 加上 ```:label="subitem.label"```
+
+
+
+# 为什么设置crossorigin属性
+
+当引入跨域的脚本（比如用了 apis.google.com 上的库文件）时，如果这个脚本有错误，因为浏览器的限制（根本原因是协议的规定），是拿不到错误信息的。当本地尝试使用 `window.onerror` 去记录脚本的错误时，跨域脚本的错误只会返回 ```Script error```
+
+HTML5 新的规定，是可以允许本地获取到跨域脚本的错误信息的，但有两个条件：一是跨域脚本的服务器必须通过 `Access-Control-Allow-Origin` 头信息允许当前域名可以获取错误信息，二是网页里的 `script` 标签也必须指明 `src` 属性指定的地址是支持跨域的地址，也就是 crossorigin 属性。有了这两个条件，就可以获取跨域脚本的错误信息
+
+[参考资料](https://www.chrisyue.com/what-the-hell-is-crossorigin-attribute-in-html-script-tag.html)
+
+
+
+# 浮动的元素都停留在哪里
+
+```html
+<div class='container'>
+    <div class='normal-box'>normal box</div>
+    <div class='float-box'>float box</div>
+</div>
+```
+
+
+
+# powershell yarn报错
+
+[描述](https://blog.csdn.net/qq_45062261/article/details/100132489)
+
+
+
+# IDE目录显示问题
+
+https://www.cnblogs.com/eret9616/p/12099165.html
+
+
+
+# 文字换行
+
+hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh => 不换行
+
+哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈 => 换行
+
+
+
+# 除了第一次外，按钮点击两次后modal才出现
+
+
+
+# 文字溢到padding
+
