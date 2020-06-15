@@ -215,3 +215,29 @@ hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh => 不换行
 
 # 文字溢到padding
 
+
+
+# 项目拉下来后安装包的错误与解决
+
+```powershell
+> yarn add
+Missing list of packages to add to your project
+```
+
+⬇
+
+**使用 ```npm``` 安装**
+
+```powershell
+> npm install
+Unexpected end of JSON input while parsing near '...{"caniuse-lite":"^1.0'
+```
+
+⬇
+
+清除npm缓存后重新安装
+
+```powershell
+> npm cache clean --force
+```
+
