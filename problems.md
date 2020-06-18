@@ -241,3 +241,47 @@ Unexpected end of JSON input while parsing near '...{"caniuse-lite":"^1.0'
 > npm cache clean --force
 ```
 
+
+
+# 为什么子组件只有两个插槽，父组件使用时填了三个元素块
+
+```vue
+// 子组件
+<template>
+  <Layout>
+    <BasicHeader>
+      <template v-slot:beforeUser>
+        <slot name="headerBeforeUser"></slot> // 第一个插槽，具名插槽
+      </template>
+    </BasicHeader>
+    <Layout>
+      <Sider>
+        <BasicMenu></BasicMenu>
+      </Sider>
+      <Content>
+        <Alert v-if="browserAlert">
+          浏览器版本提醒
+          <span slot="desc">{{browserAlert}}</span>
+        </Alert>
+        <slot></slot> // 第二个插槽，匿名插槽
+      </Content>
+    </Layout>
+  </Layout>
+</template>
+```
+
+
+
+```vue
+// 父组件
+<template>
+  <BasicLayout>
+    <BasicBread/> // ② 剩下的虽然是两个代码块，但是都是用来填那个匿名插槽的
+    <HeaderScreen slot="headerBeforeUser"></HeaderScreen> // ① 填第一个具名插槽
+    <div> // ②
+      <router-view></router-view>
+    </div>
+  </BasicLayout>
+</template>
+```
+
