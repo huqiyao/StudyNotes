@@ -285,3 +285,38 @@ Unexpected end of JSON input while parsing near '...{"caniuse-lite":"^1.0'
 </template>
 ```
 
+
+
+# iview的Row组件中的gutter作用
+
+```vue
+<Row :gutter='20'>
+    <Col></Col>
+    <Col></Col>
+</Row>
+⬇
+<div style="margin-left:-10px;margin-right:10px">
+    <div style="padding-left: 10px; padding-right: 10px;"></div>
+    <div style="padding-left: 10px; padding-right: 10px;"></div>    
+</div>
+```
+
+
+
+# z-index无效
+
+https://blog.csdn.net/zhu562002124/article/details/48545609
+
+
+
+# 改变数组对象的属性名
+
+<div><img src='图片资料/修改对象属性名.jpg'/></div>
+
+[参考资料](https://blog.csdn.net/alisa_lisa/article/details/95620339)
+
+
+
+# 箭头函数的错
+
+https://blog.csdn.net/z93701081/article/details/78933174

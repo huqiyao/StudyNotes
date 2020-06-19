@@ -49,14 +49,15 @@ props:{
   
   - null、undefined：支持任何类型
   - String
-- Number
+  
+  - Number
+  
   - Boolean
   - Array
   - Object
   - Date
   - Function
   - Symbol
-  
   
   
 - 自定义类型
