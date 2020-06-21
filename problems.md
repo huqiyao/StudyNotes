@@ -191,6 +191,8 @@ HTML5 新的规定，是可以允许本地获取到跨域脚本的错误信息�
 
 # powershell yarn报错
 
+powershell parcel 同理
+
 [描述](https://blog.csdn.net/qq_45062261/article/details/100132489)
 
 
@@ -320,3 +322,9 @@ https://blog.csdn.net/zhu562002124/article/details/48545609
 # 箭头函数的错
 
 https://blog.csdn.net/z93701081/article/details/78933174
+
+
+
+# vue引入后无效的问题
+
+https://zhidao.baidu.com/question/2144542621615771268.html
