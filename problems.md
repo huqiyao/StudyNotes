@@ -328,3 +328,87 @@ https://blog.csdn.net/z93701081/article/details/78933174
 # vue引入后无效的问题
 
 https://zhidao.baidu.com/question/2144542621615771268.html
+
+
+
+# 将返回数据显示为百分比
+
+**我的写法**：
+
+```vue
+<script>
+	this.tableData = res.list.map(item => ({
+      ...item,
+      handlePercent: `${item.handlePercent*100}%`,
+    }));
+</script>
+```
+
+出现问题: ```0.0035*100 => 0.35000000000000003```
+
+原因：
+
+**项目中正确的写法**：
+
+```javascript
+// utils/NumberUtils
+export default{
+   /**
+   * 求 a / b 百分数，默认保留两位小数
+   * @param {Number} a 分子
+   * @param {Number} b 分母
+   * @param {Number} scale 小数位数
+   */
+  percent(a = 0, b = 1, scale = 2) {
+    if (b === 0) {
+      return 0;
+    }
+    const remainder = (a * 100) % b;
+    const quotient = (a * 100) / b;
+    return remainder === 0 ? quotient : Number(quotient.toFixed(scale));
+  },
+}
+```
+
+```vue
+<script>
+    import { NumU } from '@.zj/utils'
+	this.tableData = res.list.map(item => ({
+      ...item,
+      handlePercent: `${NumU.percent(item.handlePercent, 1, 2)}%`,
+    }));
+</script>
+```
+
+
+
+# 比较方法的优化
+
+```javascript
+range(a){
+  if(a < 0){
+      a = 0;
+  }else if(a > 1){
+      a = 1;
+  }
+    return a;
+}
+
+range(a, max = 1, min = 0) {
+  if(a < min){
+      a = min;
+  }else if(a > max){
+      a = max;
+  }
+  return a;
+ }
+
+range(a, max = 1, min = 0){
+    const ma = Math.max(min, a);
+    const mi = Math.min(max, a);
+    return Math.max(ma, mi);
+}
+```
+
+
+
