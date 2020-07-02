@@ -412,3 +412,70 @@ range(a, max = 1, min = 0){
 
 
 
+# 媒体查询没生效问题
+
+- @media screen and (min-width: 1920px)应写在公共样式后面
+
+- scss结构要与前面的公共样式保持一致
+
+  ```scss
+  .chart-container{
+      .chart-content{
+          .part1{
+              .part1_line1{} // .chart-container .chart-content .part1 .part1_line1
+          }  
+          .part2{}
+          .img1{}
+          .img2{}
+          .img3{}
+      }
+      .bottom-content{}
+  }
+  @media screen and (min-width: 1920px){
+      .chart-container{
+      .chart-content{
+          .part1_line1{} // .chart-container .chart-content .part1_line1 可能修改不了上述...part1_line1的样式
+          .part2{}
+          .img1{}
+          .img2{}
+          .img3{}
+      }
+      .bottom-content{}
+  }
+  }
+  ```
+
+  
+
+# 安装vue-devtools
+
+- 下载安装包 （.crx文件）
+
+- 把安装包拖进 [chrome://extensions/](chrome://extensions/)
+
+- 修改```C:\Users\wb-hqy757070\AppData\Local\Google\Chrome\User Data\Default\Extensions\nhdogjmejiglipccpnnnanhbledajbpd\5.3.3_0``` 下的 manifest.json文件：
+
+  ```json
+  "background": {
+     "persistent": true,}
+  ```
+
+  
+
+# 为什么vue项目没有webpack.config.js文件了
+
+[答案](https://www.jianshu.com/p/6a57d197cd9b)
+
+cli-3.x的没有build的配置简介了许多 如果要配置webpack 在项目根目录下创建vue.config.js 在里面进行需要的配置
+
+
+
+# cli.vuejs.org/zh 打不开
+
+将代理的自动检测关闭
+
+
+
+# @代表/src，为什么没有看到其配置
+
+因为新版的vue-cli创建项目时，隐藏了webpack.config.js文件，在其中有写到的
