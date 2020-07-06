@@ -479,3 +479,18 @@ cli-3.x的没有build的配置简介了许多 如果要配置webpack 在项目�
 # @代表/src，为什么没有看到其配置
 
 因为新版的vue-cli创建项目时，隐藏了webpack.config.js文件，在其中有写到的
+
+
+
+# li设置为 display:flex后，前面的小圆点消失
+
+
+
+# 为什么postman的get参数可以写在请求体里面？
+
+https://blog.csdn.net/qq_40734247/article/details/107058221
+
+
+
+# 伪元素的content可以取什么值
+
