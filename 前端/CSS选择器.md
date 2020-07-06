@@ -38,6 +38,10 @@
 
 ## CSS选择器的权重
 
+[MDN](https://developer.mozilla.org/zh-CN/docs/Web/CSS/Specificity)
+
+[15.css选择器优先级问题](https://www.nowcoder.com/discuss/429359?type=post&order=time&pos=&page=0&channel=666&source_id=search_post)
+
 **权重：作为相同元素有多个样式声明时，谁被谁覆盖的依据**
 
 | 等级 | 内容                 | 权重 |
