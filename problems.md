@@ -494,3 +494,52 @@ https://blog.csdn.net/qq_40734247/article/details/107058221
 
 # 伪元素的content可以取什么值
 
+
+
+# iview里render操作按钮时
+
+```javascript
+{
+  title: '操作',
+  key: 'action',
+  render: (h, params) => {
+    return h(
+      'Button',
+      {
+        props: { type: 'text' },
+        on: {
+          click: () => {
+            console.log(params.index);
+          },
+        },
+      },
+      '详情',
+    );
+  },
+},
+```
+
+上面报错：```Unexpected block statement surrounding arrow body; move the returned value immediately after the '=>'```
+
+```javascript
+{
+  title: '操作',
+  key: 'action',
+  // eslint-disable-next-line arrow-body-style
+  render: (h, params) => {
+    return h(
+      'Button',
+      {
+        props: { type: 'text' },
+        on: {
+          click: () => {
+            console.log(params.index);
+          },
+        },
+      },
+      '详情',
+    );
+  },
+},
+```
+
