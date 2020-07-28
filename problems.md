@@ -543,3 +543,327 @@ https://blog.csdn.net/qq_40734247/article/details/107058221
 },
 ```
 
+
+
+# Vscode更新之后rg.exe占用cpu过高
+
+search.followSymlinks 改为 false
+
+https://www.cnblogs.com/stulzq/p/8387977.html
+
+
+
+# Vue src值怎么写
+
+https://blog.csdn.net/qq_42991509/article/details/106806865
+
+```vue
+ <ZjIconText
+      position="topIcon"
+      :icon="require(`../../../../assets/imgs/risk/${riskLevelName}icon@2x.png`)"
+    >
+     写成 :icon="`../../../../assets/imgs/risk/${riskLevelName}icon@2x.png`" 图片不出现
+      <span>{{riskLevelName}}</span>
+    </ZjIconText>
+```
+
+
+
+
+
+# background-ground 与 background-image
+
+
+
+# 关于数组的方法与浅拷贝
+
+```javascript
+export const riskBasicLevel: def.ListItem[] = [
+  {
+    name: '高风险',
+    value: 'P0',
+  },
+  {
+    name: '中风险',
+    value: 'P2',
+  },
+  {
+    name: '低风险',
+    value: 'P3',
+  },
+];
+
+export const riskLevelList: def.ListItem[] = [
+  ...riskBasicLevel,
+{
+  name: '中高风险',
+  value: 'P1',
+},
+];
+```
+
+上述，想让中高风险排在第二位，怎么办？
+
+第一版：
+
+```javascript
+export const riskBasicLevel: def.ListItem[] = [
+  {
+    name: '高风险',
+    value: 'P0',
+  },
+  {
+    name: '中风险',
+    value: 'P2',
+  },
+  {
+    name: '低风险',
+    value: 'P3',
+  },
+];
+export const riskLevelList: def.ListItem[] = riskBasicList.splice(1, 0, {
+  name: '中高风险',
+  value: 'P1',
+});
+
+// 结果：
+riskBasicLevel：[{
+    name: '高风险',
+    value: 'P0',
+  },
+  {
+    name: '中高风险',
+    value: 'P1',
+  },
+  {
+    name: '中风险',
+    value: 'P2',
+  },
+  {
+    name: '低风险',
+    value: 'P3',
+  }]
+ 
+riskBasicLevel：[]
+```
+
+第二版：
+
+```javascript
+export const riskBasicLevel: def.ListItem[] = [
+  {
+    name: '高风险',
+    value: 'P0',
+  },
+  {
+    name: '中风险',
+    value: 'P2',
+  },
+  {
+    name: '低风险',
+    value: 'P3',
+  },
+];
+export const riskLevelList: def.ListItem[] = riskBasicLevel;
+riskLevelList.splice(1, 0, {
+    name: '中高风险',
+    value: 'P1'
+})
+// 结果：
+riskBasicLevel、riskLevelList 都等于
+ [{
+    name: '高风险',
+    value: 'P0',
+  },
+  {
+    name: '中高风险',
+    value: 'P1',
+  },
+  {
+    name: '中风险',
+    value: 'P2',
+  },
+  {
+    name: '低风险',
+    value: 'P3',
+  }]
+```
+
+第三版：对riskBasicLevel进行深拷贝，以免二者共享内存导致副本的改变影响
+
+```javascript
+export const riskBasicLevel: def.ListItem[] = [
+  {
+    name: '高风险',
+    value: 'P0',
+  },
+  {
+    name: '中风险',
+    value: 'P2',
+  },
+  {
+    name: '低风险',
+    value: 'P3',
+  },
+];
+export const riskLevelList: def.ListItem[] = riskBasicLevel;
+riskLevelList.splice(1, 0, {
+    name: '中高风险',
+    value: 'P1'
+})
+// 结果：
+riskBasicLevel、riskLevelList 都等于
+ [{
+    name: '高风险',
+    value: 'P0',
+  },
+  {
+    name: '中高风险',
+    value: 'P1',
+  },
+  {
+    name: '中风险',
+    value: 'P2',
+  },
+  {
+    name: '低风险',
+    value: 'P3',
+  }]
+```
+
+
+
+# 关于typescript的interface
+
+①
+
+```typescript
+// type.d.ts 
+declare namespace def {
+    export interface ListItem {
+        name?: string;
+        label?: string;
+        value?: any;
+        percent?: boolean;
+   } 
+}
+
+// const.ts
+export const topCards = (data?: { [index: string]: string | number | boolean }): def.ListItem[] => [
+  {
+    name: '非法经营线索数',
+    value: data?.clueTotalNum,
+    percent: false,
+  },
+  {
+    name: '生成风险事件数',
+    value: data?.riskTotalNum,
+    percent: false,
+  },
+  {
+    name: '风险事件处置率',
+    value: data?.handleRiskPercent,
+    percent: true,
+  },
+];
+```
+
+②
+
+```typescript
+// type.d.ts 
+declare namespace def {
+    export interface ListItem {
+        [index:string]: any;
+        name?: string;
+        label?: string;
+        value?: any;
+   } 
+}
+
+// const.ts
+export const topCards = (data?: { [index: string]: string | number | boolean }): def.ListItem[] => [
+  {
+    name: '非法经营线索数',
+    value: data?.clueTotalNum,
+    percent: false,
+  },
+  {
+    name: '生成风险事件数',
+    value: data?.riskTotalNum,
+    percent: false,
+  },
+  {
+    name: '风险事件处置率',
+    value: data?.handleRiskPercent,
+    percent: true,
+  },
+];
+```
+
+③
+
+```typescript
+// type.d.ts 
+declare namespace def {
+    export interface ListItem {
+        name?: string;
+        label?: string;
+        value?: any;
+   } 
+}
+
+// const.ts
+interface NewListItem extends def.ListItem{
+    percent?: boolean;
+}
+export const topCards = (data?: { [index: string]: string | number | boolean }): def.ListItem[] => [
+  {
+    name: '非法经营线索数',
+    value: data?.clueTotalNum,
+    percent: false,
+  },
+  {
+    name: '生成风险事件数',
+    value: data?.riskTotalNum,
+    percent: false,
+  },
+  {
+    name: '风险事件处置率',
+    value: data?.handleRiskPercent,
+    percent: true,
+  },
+];
+```
+
+
+
+# npm install 时出现的错误
+
+Package require os(darwin) not compatible with your platform(win32)
+
+https://blog.csdn.net/fabulous1111/article/details/79388841
+
+
+
+# html: 100%根据的是谁的高度
+
+**浏览器负责分配块级元素宽度，那么浏览器也一定可以分配高度(只是没有做)，那么浏览器本身是有宽度和高度的，设置html的height:100%，就可以获取浏览器的定高了，后面的body和div也就有了依赖。**
+
+
+
+# 关于html、body的背景色
+
+https://blog.csdn.net/javaloveiphone/article/details/51098972
+
+
+
+# document是什么？
+
+打印document，结果是该html文件的所有内容
+
+
+
+# 为什么document.body.style.height是空的？且document.body.style对象的所有属性值都是空字符串？
+
+我以为，这个style对象指的是body的行内style，因为没有写行内style所以都是空的
