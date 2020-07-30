@@ -867,3 +867,8 @@ https://blog.csdn.net/javaloveiphone/article/details/51098972
 # 为什么document.body.style.height是空的？且document.body.style对象的所有属性值都是空字符串？
 
 我以为，这个style对象指的是body的行内style，因为没有写行内style所以都是空的
+
+
+
+# elem.style.left这是以什么为基准的？
+
