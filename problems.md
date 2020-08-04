@@ -872,3 +872,32 @@ https://blog.csdn.net/javaloveiphone/article/details/51098972
 
 # elem.style.left这是以什么为基准的？
 
+
+
+# 起本地服务时总是401，不断刷新
+
+浏览器的问题，他无法保存cookie
+
+https://blog.csdn.net/weixin_38199437/article/details/105007302
+
+
+
+# 合并hotfix分支xx进master分支时遇到的问题
+
+```powershell
+> git flow hotfix finish 'fixAreaIdProblem'
+Branches 'develop' and 'origin/develop' have diverged.
+Fatal: And branch 'develop' may be fast-forwarded.
+```
+
+解决：更新本地的develop分支
+
+解决后再执行命令：```git flow hotfix finish 'fixAreaIdProblem'```
+
+让我编辑tag message
+
+解决：```i``` 进入编辑状态 ➡ 编辑 ➡ ```esc``` 退出编辑状态 ➡ ```:wq``` 保存并退出
+
+我以为就是merge到 master分支了，但是develop分支出现了上传⬆标志
+
+原来：```git flow hotfix finish 'fixAreaIdProblem'``` 命令，会把hotfix分支merge到master分支以及develop分支
