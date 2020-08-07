@@ -901,3 +901,31 @@ Fatal: And branch 'develop' may be fast-forwarded.
 我以为就是merge到 master分支了，但是develop分支出现了上传⬆标志
 
 原来：```git flow hotfix finish 'fixAreaIdProblem'``` 命令，会把hotfix分支merge到master分支以及develop分支
+
+
+
+# computed计算属性传入参数
+
+[参考1](https://www.cnblogs.com/liluning/p/10418853.html)
+
+[参考2](https://www.cnblogs.com/liluning/p/10418853.html)
+
+（看一下评论）
+
+其实，没必要使用computed，直接在组件上绑方法也是可以的
+
+
+
+# 撤销git pull
+
+- git reflog 当前分支名
+- 查看pull之前的记录的版本号
+- ```git reset --hard 版本号```
+
+
+
+# Window类 与 Object类的关系
+
+[思否](https://segmentfault.com/q/1010000016894736)
+
+<div align="center"><img height="600px" width="500px" src="图片资料/Window与Object.png"></div>
