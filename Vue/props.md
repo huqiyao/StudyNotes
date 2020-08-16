@@ -59,7 +59,6 @@ props:{
   - Function
   - Symbol
   
-  
 - 自定义类型
 
   ```javascript

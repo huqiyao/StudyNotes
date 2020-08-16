@@ -929,3 +929,17 @@ Fatal: And branch 'develop' may be fast-forwarded.
 [思否](https://segmentfault.com/q/1010000016894736)
 
 <div align="center"><img height="600px" width="500px" src="图片资料/Window与Object.png"></div>
+
+
+
+
+
+# vscode在新窗口打开文件
+
+setting.json文件加上 ```"workbench.editor.enablePreview": false,```
+
+
+
+# vscode目录结构变成了树形
+
+settings，搜索框里搜```Compact folders```，把 **√** 去掉
