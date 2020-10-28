@@ -943,3 +943,37 @@ setting.json文件加上 ```"workbench.editor.enablePreview": false,```
 # vscode目录结构变成了树形
 
 settings，搜索框里搜```Compact folders```，把 **√** 去掉
+
+
+
+# 为什么react里的方法需要再绑定this
+
+[知乎资料](https://zhuanlan.zhihu.com/p/37911534)
+
+```javascript
+class ClickCounter extends Component{
+    constructor(props){
+        super(props)
+        this.state = {
+            cnt: 0
+        }
+        this.onClickBtn = this.onClickBtn.bind(this)
+    }
+    onClickBtn(){
+        this.setState({cnt: this.state.cnt + 1});
+    }
+    render(){
+        return(
+            <div>
+                <button onClick={this.onClickBtn}>点我</button>
+                <p>点了{this.state.cnt}下</p>
+            </div>
+        )
+    }
+}
+```
+
+- class里面的方法都在严格模式
+- 严格模式下，没有显式调用者时，函数里的this指向undefined
+- onClick=xx，xx是作为形参传入ad deventlistener里的，没有实际调用者
+
