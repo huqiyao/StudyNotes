@@ -1,4 +1,30 @@
-# this在node环境中
+# GIO实习期
+
+
+
+## React.FC<> 和 React.Component
+
+React组件，有两种写法，一种是类写法，一种就是函数写法
+
+```typescript
+const Alert: React.FC<AlertProps> = (props: AlertProps) => {
+}
+```
+
+
+
+```javascript
+class Alert extends React.component{ 
+}
+```
+
+
+
+
+
+# Total
+
+## this在node环境中
 
 > **node环境：**
 >
@@ -26,13 +52,13 @@ console.log(this); // {age:21}
 <div align='center'><img src='图片资料/node中的this.png'></div>
 
 
-# Window 和 window 
+## Window 和 window 
 
 
 
 
 
-# substring 和 substr
+## substring 和 substr
 
 - substr(start [, length])
   - length 为0或者负数，返回空字符串
@@ -42,7 +68,7 @@ console.log(this); // {age:21}
 
 
 
-# console.log() 和 console.dir()
+## console.log() 和 console.dir()
 
 ```javascript
 function Foo(){
@@ -60,7 +86,7 @@ function Foo(){
 
 
 
-# 输错一次用户名和密码，就没有重输的机会，一直Authentication failed
+## 输错一次用户名和密码，就没有重输的机会，一直Authentication failed
 
 [参考资料](https://blog.csdn.net/qq_34665539/article/details/80408282)
 
@@ -68,7 +94,7 @@ function Foo(){
 
 
 
-# 关于基本类型与构造函数实例的问题
+## 关于基本类型与构造函数实例的问题
 
 ```javascript
 var str = "hello world";
@@ -78,7 +104,7 @@ console.log(str.__proto__ === String.prototype); // true
 
 
 
-# 判空的问题
+## 判空的问题
 
 ```javascript
 var tags = []
@@ -87,11 +113,11 @@ console.log(tags === []) // 为什么返回false
 
 
 
-# toString 与 toString()
+## toString 与 toString()
 
 
 
-# function的name
+## function的name
 
 ```javascript
 // 为function及function的prototype增加name属性，并赋值
@@ -123,7 +149,7 @@ console.dir(Foo)
 
 
 
-# 使用iView的Col、Input标签报错
+## 使用iView的Col、Input标签报错
 
 https://blog.csdn.net/weixin_38465623/article/details/85490353
 
@@ -131,25 +157,25 @@ https://blog.csdn.net/jiaqingge/article/details/80498536
 
 
 
-# 管理员查看不到我的feature分支
+## 管理员查看不到我的feature分支
 
 https://www.cnblogs.com/zhou-chao/p/7678899.html
 
 
 
-# vue 的 v-on:input 事件到底是什么
+## vue 的 v-on:input 事件到底是什么
 
 [参考答案](https://segmentfault.com/q/1010000009271217)
 
 
 
-# 安装窗口逃到屏幕外边了
+## 安装窗口逃到屏幕外边了
 
 ```Alt + space``` 进入移动状态
 
 
 
-# 用iview的Select组件，选了之后不回显问题
+## 用iview的Select组件，选了之后不回显问题
 
 ```vue
 <Select v-model="ruleFormData[item.prop]"
@@ -168,7 +194,7 @@ https://www.cnblogs.com/zhou-chao/p/7678899.html
 
 
 
-# 为什么设置crossorigin属性
+## 为什么设置crossorigin属性
 
 当引入跨域的脚本（比如用了 apis.google.com 上的库文件）时，如果这个脚本有错误，因为浏览器的限制（根本原因是协议的规定），是拿不到错误信息的。当本地尝试使用 `window.onerror` 去记录脚本的错误时，跨域脚本的错误只会返回 ```Script error```
 
@@ -178,7 +204,7 @@ HTML5 新的规定，是可以允许本地获取到跨域脚本的错误信息�
 
 
 
-# 浮动的元素都停留在哪里
+## 浮动的元素都停留在哪里
 
 ```html
 <div class='container'>
@@ -189,7 +215,7 @@ HTML5 新的规定，是可以允许本地获取到跨域脚本的错误信息�
 
 
 
-# powershell yarn报错
+## powershell yarn报错
 
 powershell parcel 同理
 
@@ -197,13 +223,13 @@ powershell parcel 同理
 
 
 
-# IDE目录显示问题
+## IDE目录显示问题
 
 https://www.cnblogs.com/eret9616/p/12099165.html
 
 
 
-# 文字换行
+## 文字换行
 
 hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh => 不换行
 
@@ -211,15 +237,15 @@ hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh => 不换行
 
 
 
-# 除了第一次外，按钮点击两次后modal才出现
+## 除了第一次外，按钮点击两次后modal才出现
 
 
 
-# 文字溢到padding
+## 文字溢到padding
 
 
 
-# 项目拉下来后安装包的错误与解决
+## 项目拉下来后安装包的错误与解决
 
 ```powershell
 > yarn add
@@ -245,7 +271,7 @@ Unexpected end of JSON input while parsing near '...{"caniuse-lite":"^1.0'
 
 
 
-# 为什么子组件只有两个插槽，父组件使用时填了三个元素块
+## 为什么子组件只有两个插槽，父组件使用时填了三个元素块
 
 ```vue
 // 子组件
@@ -289,7 +315,7 @@ Unexpected end of JSON input while parsing near '...{"caniuse-lite":"^1.0'
 
 
 
-# iview的Row组件中的gutter作用
+## iview的Row组件中的gutter作用
 
 ```vue
 <Row :gutter='20'>
@@ -305,13 +331,13 @@ Unexpected end of JSON input while parsing near '...{"caniuse-lite":"^1.0'
 
 
 
-# z-index无效
+## z-index无效
 
 https://blog.csdn.net/zhu562002124/article/details/48545609
 
 
 
-# 改变数组对象的属性名
+## 改变数组对象的属性名
 
 <div><img src='图片资料/修改对象属性名.jpg'/></div>
 
@@ -319,19 +345,19 @@ https://blog.csdn.net/zhu562002124/article/details/48545609
 
 
 
-# 箭头函数的错
+## 箭头函数的错
 
 https://blog.csdn.net/z93701081/article/details/78933174
 
 
 
-# vue引入后无效的问题
+## vue引入后无效的问题
 
 https://zhidao.baidu.com/question/2144542621615771268.html
 
 
 
-# 将返回数据显示为百分比
+## 将返回数据显示为百分比
 
 **我的写法**：
 
@@ -382,7 +408,7 @@ export default{
 
 
 
-# 比较方法的优化
+## 比较方法的优化
 
 ```javascript
 range(a){
@@ -412,7 +438,7 @@ range(a, max = 1, min = 0){
 
 
 
-# 媒体查询没生效问题
+## 媒体查询没生效问题
 
 - @media screen and (min-width: 1920px)应写在公共样式后面
 
@@ -447,7 +473,7 @@ range(a, max = 1, min = 0){
 
   
 
-# 安装vue-devtools
+## 安装vue-devtools
 
 - 下载安装包 （.crx文件）
 
@@ -462,7 +488,7 @@ range(a, max = 1, min = 0){
 
   
 
-# 为什么vue项目没有webpack.config.js文件了
+## 为什么vue项目没有webpack.config.js文件了
 
 [答案](https://www.jianshu.com/p/6a57d197cd9b)
 
@@ -470,33 +496,33 @@ cli-3.x的没有build的配置简介了许多 如果要配置webpack 在项目�
 
 
 
-# cli.vuejs.org/zh 打不开
+## cli.vuejs.org/zh 打不开
 
 将代理的自动检测关闭
 
 
 
-# @代表/src，为什么没有看到其配置
+## @代表/src，为什么没有看到其配置
 
 因为新版的vue-cli创建项目时，隐藏了webpack.config.js文件，在其中有写到的
 
 
 
-# li设置为 display:flex后，前面的小圆点消失
+## li设置为 display:flex后，前面的小圆点消失
 
 
 
-# 为什么postman的get参数可以写在请求体里面？
+## 为什么postman的get参数可以写在请求体里面？
 
 https://blog.csdn.net/qq_40734247/article/details/107058221
 
 
 
-# 伪元素的content可以取什么值
+## 伪元素的content可以取什么值
 
 
 
-# iview里render操作按钮时
+## iview里render操作按钮时
 
 ```javascript
 {
@@ -545,7 +571,7 @@ https://blog.csdn.net/qq_40734247/article/details/107058221
 
 
 
-# Vscode更新之后rg.exe占用cpu过高
+## Vscode更新之后rg.exe占用cpu过高
 
 search.followSymlinks 改为 false
 
@@ -553,7 +579,7 @@ https://www.cnblogs.com/stulzq/p/8387977.html
 
 
 
-# Vue src值怎么写
+## Vue src值怎么写
 
 https://blog.csdn.net/qq_42991509/article/details/106806865
 
@@ -571,11 +597,11 @@ https://blog.csdn.net/qq_42991509/article/details/106806865
 
 
 
-# background-ground 与 background-image
+## background-ground 与 background-image
 
 
 
-# 关于数组的方法与浅拷贝
+## 关于数组的方法与浅拷贝
 
 ```javascript
 export const riskBasicLevel: def.ListItem[] = [
@@ -733,7 +759,7 @@ riskBasicLevel、riskLevelList 都等于
 
 
 
-# 关于typescript的interface
+## 关于typescript的interface
 
 ①
 
@@ -838,7 +864,7 @@ export const topCards = (data?: { [index: string]: string | number | boolean }):
 
 
 
-# npm install 时出现的错误
+## npm install 时出现的错误
 
 Package require os(darwin) not compatible with your platform(win32)
 
@@ -846,35 +872,35 @@ https://blog.csdn.net/fabulous1111/article/details/79388841
 
 
 
-# html: 100%根据的是谁的高度
+## html: 100%根据的是谁的高度
 
 **浏览器负责分配块级元素宽度，那么浏览器也一定可以分配高度(只是没有做)，那么浏览器本身是有宽度和高度的，设置html的height:100%，就可以获取浏览器的定高了，后面的body和div也就有了依赖。**
 
 
 
-# 关于html、body的背景色
+## 关于html、body的背景色
 
 https://blog.csdn.net/javaloveiphone/article/details/51098972
 
 
 
-# document是什么？
+## document是什么？
 
 打印document，结果是该html文件的所有内容
 
 
 
-# 为什么document.body.style.height是空的？且document.body.style对象的所有属性值都是空字符串？
+## 为什么document.body.style.height是空的？且document.body.style对象的所有属性值都是空字符串？
 
 我以为，这个style对象指的是body的行内style，因为没有写行内style所以都是空的
 
 
 
-# elem.style.left这是以什么为基准的？
+## elem.style.left这是以什么为基准的？
 
 
 
-# 起本地服务时总是401，不断刷新
+## 起本地服务时总是401，不断刷新
 
 浏览器的问题，他无法保存cookie
 
@@ -882,7 +908,7 @@ https://blog.csdn.net/weixin_38199437/article/details/105007302
 
 
 
-# 合并hotfix分支xx进master分支时遇到的问题
+## 合并hotfix分支xx进master分支时遇到的问题
 
 ```powershell
 > git flow hotfix finish 'fixAreaIdProblem'
@@ -904,7 +930,7 @@ Fatal: And branch 'develop' may be fast-forwarded.
 
 
 
-# computed计算属性传入参数
+## computed计算属性传入参数
 
 [参考1](https://www.cnblogs.com/liluning/p/10418853.html)
 
@@ -916,7 +942,7 @@ Fatal: And branch 'develop' may be fast-forwarded.
 
 
 
-# 撤销git pull
+## 撤销git pull
 
 - git reflog 当前分支名
 - 查看pull之前的记录的版本号
@@ -924,7 +950,7 @@ Fatal: And branch 'develop' may be fast-forwarded.
 
 
 
-# Window类 与 Object类的关系
+## Window类 与 Object类的关系
 
 [思否](https://segmentfault.com/q/1010000016894736)
 
@@ -934,19 +960,19 @@ Fatal: And branch 'develop' may be fast-forwarded.
 
 
 
-# vscode在新窗口打开文件
+## vscode在新窗口打开文件
 
 setting.json文件加上 ```"workbench.editor.enablePreview": false,```
 
 
 
-# vscode目录结构变成了树形
+## vscode目录结构变成了树形
 
 settings，搜索框里搜```Compact folders```，把 **√** 去掉
 
 
 
-# 为什么react里的方法需要再绑定this
+## 为什么react里的方法需要再绑定this
 
 [知乎资料](https://zhuanlan.zhihu.com/p/37911534)
 
@@ -976,4 +1002,23 @@ class ClickCounter extends Component{
 - class里面的方法都在严格模式
 - 严格模式下，没有显式调用者时，函数里的this指向undefined
 - onClick=xx，xx是作为形参传入ad deventlistener里的，没有实际调用者
+
+
+
+## 为什么不建议在html里直接写onclick等
+
+- onclick添加的事件是在全局环境下执行的，污染了全局环境
+- 当绑定了onclick的DOM元素要从DOM树里删除的话，需要把事件处理器注销，否则可能造成内存泄漏
+- 视图和用户逻辑冗余
+- 
+
+
+
+## 为什么事件处理函数有的加括号有的不加
+
+
+
+
+
+
 
