@@ -1020,5 +1020,357 @@ class ClickCounter extends Component{
 
 
 
+# create-react-app创建的Re actJS开发服务器端口与express/node.js后端服务器接口冲突（both 3000）
 
+> To see the app in action, we open the browser and navigate to **http://localhost:3000**. But here is where stuff can be somewhat tricky. Let’s say we build a RESTful service for the backend using NodeJS and Express. The default port used by Express is **3000**, the same default port used by ReactJS development server. Consequently, we need to resolve this port conflict by changing one of the ports. Assume that we’re adamant to keep port 3000 for NodeJS backend, so the port change should be applied to React.
+
+https://tech.amikelive.com/node-830/reactjs-changing-default-port-3000-in-create-react-app/
+
+https://zhuanlan.zhihu.com/p/65564606
+
+https://github.com/amandakelake/blog/blob/master/Framework/react/Express%20%2B%20create-react-app%20%E5%BF%AB%E9%80%9F%E6%9E%84%E5%BB%BA%E5%89%8D%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83.md
+
+
+
+# 实现简易createStore
+
+import createStore from './createStore';
+
+*const* marketingStore = createStore();
+
+window.marketing_store = marketingStore;
+
+export default marketingStore;
+
+https://segmentfault.com/a/1190000011669397
+
+
+
+# typescript的unknow与any类型
+
+https://juejin.cn/post/6844903866073350151#heading-0
+
+
+
+# 全局变量怎样触发不同组件及时更新
+
+https://www.crifan.com/reactjs_how_implement_global_variable/
+
+
+
+# Css这样为什么不行
+
+// 错误样式
+
+```css
+.page {
+  position: relative;
+  margin: 0 auto;
+  top: 12.5%;
+  width: 40%;
+  height: 78%;
+  list-style-type: none;
+  /* ul默认有padding-inline-start: 40px，所以需要去掉 */
+  padding: 0;
+}
+
+.page li[class$='-page'] {
+  position: absolute;
+  border-radius: 0 8px 8px 0;
+  box-shadow: 1px 5px 5px rgba(0, 0, 0, 0.2);
+  padding-top: 10px 0px;
+}
+
+.cover-page {
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(to top right, #222120, #838382);
+}
+
+.end-page {
+  background-image: linear-gradient(to top right, #222120, #838382);
+  width: 100%;
+  height: 100%;
+}
+
+.inside-page {
+  width: 100%;
+  height: 96%;
+  left: 0;
+  top: 2%;
+  border: 2px lightgray solid;
+  background-color: #fcf9f4;
+}
+.inside-page div {
+  width: 100%;
+  height: 24px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+.page {
+  perspective: 2500px;
+  transform-style: preserve-3d;
+}
+.page li[class$='-page'] {
+  transform-origin: left;
+}
+.page li[class$='-page']:nth-of-type(1) {
+  transform: rotateY(-20deg);
+}
+.page li[class$='-page']:nth-of-type(2) {
+  transform: rotateY(-18deg);
+}
+.page li[class$='-page']:nth-of-type(3) {
+  transform: rotateY(-16deg);
+}
+.page li[class$='-page']:nth-of-type(4) {
+  transform: rotateY(-14deg);
+}
+.page li[class$='-page']:nth-of-type(5) {
+  transform: rotateY(-12deg);
+}
+.page li[class$='-page']:nth-of-type(6) {
+  transform: rotateY(-8deg);
+}
+.page li[class$='-page']:nth-of-type(1) {
+  transition: 1s;
+}
+.page li[class$='-page']:nth-of-type(2) {
+  transition: 0.85s;
+}
+.page li[class$='-page']:nth-of-type(3) {
+  transition: 0.7s;
+}
+.page li[class$='-page']:nth-of-type(4) {
+  transition: 0.55s;
+}
+.page li[class$='-page']:nth-of-type(5) {
+  transition: 0.4s;
+}
+.page li[class$='-page']:nth-of-type(6) {
+  transition: 0.25s;
+}
+
+/* 点击添加按钮/选中某篇日记 */
+.open-page {
+  left: 250px;
+  perspective: none;
+}
+.open-page-li:nth-of-type(1) {
+  transform: rotateY(-160deg);
+  transition: 1s;
+}
+.open-page-li:nth-of-type(2) {
+  transform: rotateY(-150deg);
+  transition: 1.3s;
+}
+.open-page-li:nth-of-type(3) {
+  transform: rotateY(-145deg);
+  transition: 1.6s;
+}
+.open-page-li:nth-of-type(4) {
+  transform: rotateY(-140deg);
+  transition: 1.9s;
+}
+.open-page-li:nth-of-type(5) {
+  transform: rotateY(-25deg);
+  transition: 2.2s;
+}
+.open-page-li:nth-of-type(6) {
+  transform: rotateY(-20deg);
+  transition: 2.5s;
+}
+/*鼠标悬停时的旋转角度和旋转时间*/
+/* .page:hover {
+  left: 250px;
+  perspective: none;
+}
+.page:hover li[class$='-page']:nth-of-type(1) {
+  transform: rotateY(-160deg);
+  transition: 1s;
+}
+.page:hover li[class$='-page']:nth-of-type(2) {
+  transform: rotateY(-150deg);
+  transition: 1.3s;
+}
+.page:hover li[class$='-page']:nth-of-type(3) {
+  transform: rotateY(-145deg);
+  transition: 1.6s;
+}
+.page:hover li[class$='-page']:nth-of-type(4) {
+  transform: rotateY(-140deg);
+  transition: 1.9s;
+}
+.page:hover li[class$='-page']:nth-of-type(5) {
+  transform: rotateY(-25deg);
+  transition: 2.2s;
+}
+.page:hover li[class$='-page']:nth-of-type(6) {
+  transform: rotateY(-20deg);
+  transition: 2.5s;
+} */
+
+```
+
+// 正确样式
+
+```css
+.page {
+  position: relative;
+  margin: 0 auto;
+  top: 12.5%;
+  width: 40%;
+  height: 78%;
+  list-style-type: none;
+  /* ul默认有padding-inline-start: 40px，所以需要去掉 */
+  padding: 0;
+}
+
+.page li {
+  position: absolute;
+  border-radius: 0 8px 8px 0;
+  box-shadow: 1px 5px 5px rgba(0, 0, 0, 0.2);
+  padding-top: 10px 0px;
+}
+
+.cover-page {
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(to top right, #222120, #838382);
+}
+
+.end-page {
+  background-image: linear-gradient(to top right, #222120, #838382);
+  width: 100%;
+  height: 100%;
+}
+
+.inside-page {
+  width: 100%;
+  height: 96%;
+  left: 0;
+  top: 2%;
+  border: 2px lightgray solid;
+  background-color: #fcf9f4;
+}
+.inside-page div {
+  width: 100%;
+  height: 24px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+.page {
+  perspective: 2500px;
+  transform-style: preserve-3d;
+}
+.page li {
+  transform-origin: left;
+}
+.page li:nth-of-type(1) {
+  transform: rotateY(-20deg);
+}
+.page li:nth-of-type(2) {
+  transform: rotateY(-18deg);
+}
+.page li:nth-of-type(3) {
+  transform: rotateY(-16deg);
+}
+.page li:nth-of-type(4) {
+  transform: rotateY(-14deg);
+}
+.page li:nth-of-type(5) {
+  transform: rotateY(-12deg);
+}
+.page li:nth-of-type(6) {
+  transform: rotateY(-8deg);
+}
+.page li:nth-of-type(1) {
+  transition: 1s;
+}
+.page li:nth-of-type(2) {
+  transition: 0.85s;
+}
+.page li:nth-of-type(3) {
+  transition: 0.7s;
+}
+.page li:nth-of-type(4) {
+  transition: 0.55s;
+}
+.page li:nth-of-type(5) {
+  transition: 0.4s;
+}
+.page li:nth-of-type(6) {
+  transition: 0.25s;
+}
+
+/* 点击添加按钮/选中某篇日记 */
+.open-page {
+  left: 250px;
+  perspective: none;
+}
+.page .open-page-li:nth-of-type(1) {
+  transform: rotateY(-160deg);
+  transition: 1s;
+}
+.page .open-page-li:nth-of-type(2) {
+  transform: rotateY(-150deg);
+  transition: 1.3s;
+}
+.page .open-page-li:nth-of-type(3) {
+  transform: rotateY(-145deg);
+  transition: 1.6s;
+}
+.page .open-page-li:nth-of-type(4) {
+  transform: rotateY(-140deg);
+  transition: 1.9s;
+}
+.page .open-page-li:nth-of-type(5) {
+  transform: rotateY(-25deg);
+  transition: 2.2s;
+}
+.page .open-page-li:nth-of-type(6) {
+  transform: rotateY(-20deg);
+  transition: 2.5s;
+}
+/*鼠标悬停时的旋转角度和旋转时间*/
+/* .page:hover {
+  left: 250px;
+  perspective: none;
+}
+.page:hover li[class$='-page']:nth-of-type(1) {
+  transform: rotateY(-160deg);
+  transition: 1s;
+}
+.page:hover li[class$='-page']:nth-of-type(2) {
+  transform: rotateY(-150deg);
+  transition: 1.3s;
+}
+.page:hover li[class$='-page']:nth-of-type(3) {
+  transform: rotateY(-145deg);
+  transition: 1.6s;
+}
+.page:hover li[class$='-page']:nth-of-type(4) {
+  transform: rotateY(-140deg);
+  transition: 1.9s;
+}
+.page:hover li[class$='-page']:nth-of-type(5) {
+  transform: rotateY(-25deg);
+  transition: 2.2s;
+}
+.page:hover li[class$='-page']:nth-of-type(6) {
+  transform: rotateY(-20deg);
+  transition: 2.5s;
+} */
+
+```
+
+
+
+# react清空textarea
+
+https://blog.csdn.net/weixin_30709929/article/details/96555399
+
+
+
+
+
+# 标签
 
