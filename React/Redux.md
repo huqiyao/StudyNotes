@@ -6,9 +6,15 @@
 
 
 
-> **reselect**（redux的中间件）的一个方法
+> **reselect**（redux的中间件）的一个方法，主要功能是缓存数据
+
+
 
 [参考资料](https://www.tangshuang.net/3839.html)
+
+[简单易懂](https://juejin.cn/post/6844903866354532365)
+
+
 
 ```typescript
 // 使用范例
@@ -34,6 +40,8 @@ console.log(subtotalSelector(exampleState)) // 2.15
 // 其实是（state, props）
 ```
 
+state是store里的数据？
+
 
 
 ## 解析
@@ -54,15 +62,25 @@ const selector = createSelector(fun1, fun2, f3)
 
 ## 记忆功能
 
+
+
 ### 缓存规则
 
 createSelector创建的selector的**记忆规则**：
 
-f3是个纯函数
-
-如果f3实参不变（即fun1、fun2结果都不变），则f3返回与上次相同的值，即缓存；否则返回重新计算后的结果
+如果f3实参都不变（即fun1、fun2结果不变），则f3返回与上次相同的值，即缓存；否则返回重新计算后的结果
 
 
 
 ### 实现原理
+
+state或者props变化，会导致fun1、fun2产生的实参变化，如何实现缓存？
+
+
+
+
+
+
+
+
 
