@@ -1,3 +1,49 @@
+# Flux
+
+
+
+
+
+# Redux
+
+
+
+## 三个原则
+
+### 唯一数据源
+
+项目只有一个store来管理数据，避免了数据不一致、store依赖等问题
+
+store上的数据是树形结构，它的设计是个核心问题，每个组件只用到这棵树的部分数据
+
+一个隐含要求：避免数据冗余，如sum=first + second，那就没必要存储sum了
+
+
+
+### 保持状态只读
+
+view只能获取store的值，无法直接修改store存储的数据，只能通过派发一个action对象完成
+
+
+
+### 数据改变只能通过纯函数（reducer）完成
+
+flux的register过程直接修改原state的值，而redux返回新的state
+
+```javascript
+const arr = [1,2,3]
+const reducer = (accumulator, currValue)=> { return xx }
+arr.reduce(reducer);
+```
+
+redux的reducer函数原理就是js数组reduce方法的reducer回调函数
+
+const reducer = (state = initState, action)=>{ ......return newSate }
+
+
+
+
+
 # createSelector
 
 
