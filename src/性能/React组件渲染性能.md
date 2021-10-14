@@ -18,7 +18,7 @@
 
 
 
-- :cake: <u>场景</u>：父组件更新，子组件即使 props、state 没有变化也会更新
+- :cake:  <u>场景</u>：父组件更新，子组件即使 props、state 没有变化也会更新
 
   
 
@@ -26,7 +26,7 @@
 
 
 
-- :chestnut: <u>例子</u>：
+- :chestnut:  <u>例子</u>：
 
   ```typescript
   this.state ={value: inputValue}
@@ -46,9 +46,9 @@
 
 
 
-- :rainbow: <u>优化</u>：
+- :rainbow:  <u>优化</u>：
 
-  1. 每个组件都写 shouldComponentUpdate，比较麻烦。有个捷径是，使用 react-redux 库的 connect
+  - 每个组件都写 shouldComponentUpdate，比较麻烦。有个捷径是，使用 react-redux 库的 connect
 
      ```tsx
      // 没有使用到store上的数据作为props则不填第一个参数，
@@ -66,14 +66,14 @@
 
      
 
-- :boom: <u>caution</u>：
+- :boom:  <u>caution</u>：
   - 如果 props 的某个属性（如 infor）是对象类型的，因为 **=== 是浅比较**（对于引用类型，只要未重新赋值，nextProps.infor === this.props.infor 总是 true ），所以即使 props.infor 内部实际上变化了也不会被检测出来
 
 
 
 ### 对象类型的props避免赋值时新建
 
-- :chestnut: <u>例子</u>：
+- :chestnut:  <u>例子</u>：
 
   ```typescript
   // Foo组件每次mount、update，style都被赋了新的对象
@@ -90,16 +90,25 @@
   // TodoItem组件每次mount、update，onRemove都被赋值了一个新建的匿名函数
   <TodoItem onRemove={()=>onRemoveTodo(item.id)}><TodoItem/>
     
-  /*改进*/
-  // 方法一、
-  <TodoItem onRemove={()=>onRemoveTodo(item.id)} ><TodoItem/>
-  
-  // 方法二
+  /*改进
+  * 方法二更好，符合高内聚的要求
+  */
+  // 方法一、父组件传相同的函数对象给子组件，不同的子组件调用时传不同id
+  <TodoItem onRemove={()=>onRemoveTodo(item.id)} id={item.id} ><TodoItem/>
+  const mapDispatchToProps = (dispatch, ownProps)=> ({
+    onRemoveItem: ()=>ownProps.onRemove(ownProps.id) // TodoItem组件内部可使用onRemoveItem方法
+  })
+  // 方法二、父组件不传给子组件函数对象，子组件自己dispatch action
+  <TodoItem id={item.id} ><TodoItem/>
+  const mapDispatchToProps = (dispatch, ownProps)=>{
+    const {id} = ownProps;
+    return {
+      onRemove: dispatch(aAction(id))
+    }
+  }
   ```
 
   
-
-
 
 
 
