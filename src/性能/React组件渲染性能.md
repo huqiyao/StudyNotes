@@ -116,5 +116,105 @@
 
 
 
+
+
+
+
 ##  利用reselect提高数据选取的性能
 
+
+
+- :cake:  <u>场景</u>：connect 的 mapStateToProps 在 store 发生变化的时候就会被调用，尽管变化的数据与组件无关。造成产生某些 prop 对应的函数重复执行。
+
+  
+
+- :white_check_mark:  <u>solution</u>：只要 store 中的目标 state 不变，则不重新返回 prop 对象。利用reselect的createSelector实现。
+
+
+
+- :chestnut:  <u>例子</u>：
+
+  ```typescript
+  const mapStateToProps = (state)=>{
+    const {a, b, c} = state
+    return {
+      a,
+      b,
+      c,
+      uabc: u(a, b, c) // a、b、c以外的其他变化也会造成计算
+    }
+  }
+  
+  /*
+  * reselect优化
+  **/
+  const aSelector = state => state.a
+  const bSelector = state => state.b
+  const cSelector = state => state.c
+  const uSelector = createSelector( // 只有在a、b、c变化时才会重新执行u(a,b,c) 和 return
+    [aSelector, bSelector, cSelector],
+    (a, b, c) => u(a,b,c)
+  )
+  const mapStateToProps = (state)=>{
+    const {a, b, c} = state
+    return {
+      a,
+      b,
+      c,
+      uabc: uSelector(a, b, c)
+    }
+  }
+  ```
+
+  
+
+  ```typescript
+  const selector = createSelector(
+    segmentationsService.selector,
+    webhookSettingsService.selector,
+    peopleVariablesSelector,
+    visitorVariablesSelector,
+    customEventsService.selector,
+    (
+      segmentations: Segmentation[],
+      webhookSettings,
+      peopleVariables,
+      visitorVariables,
+      customEvents
+    ) => ({ // 只有上述参数发生变化时才会执行 serializeUserVars函数 和 retrun
+      segmentations,
+      webhookSettings,
+      peopleVariables: serializeUserVars(peopleVariables, 'ppl'),
+      visitorVariables: serializeUserVars(visitorVariables, 'vstr'),
+      customEvents,
+    })
+  );
+  ```
+
+
+
+- :mag_right:  <u>reselect 缓存原理</u>
+
+  
+
+  ```typescript
+  const createSelector = (selector1, selector2, resultSelector) => {
+      let selectorCache1,  // selector1的结果记忆
+          selectorCache2,  // selector2的结果记忆
+          resultCache;     // resultSelector的结果记忆
+      return (state) => {
+          const subState1 = selector1(state);
+          const subState2 = selector2(state);
+  
+          if (selectorCache1 === subState1 && selectorCache2 === subState2) {
+              return resultCache;
+          }
+          selectorCache1 = subState1;
+          selectorCache2 = subState2;     
+          resultCache = resultSelector(selectorCache1, selectorCache2);
+          return resultCache;
+      };
+  }
+  ```
+
+  
