@@ -7,6 +7,7 @@
   * [对象类型的props避免赋值时新建](#对象类型的props避免赋值时新建)
 * [多个React组件的性能优化](#多个React组件的性能优化)
 * [利用reselect提高数据选取的性能](#利用reselect提高数据选取的性能)
+* [引用](#引用)
 
 
 
@@ -169,7 +170,7 @@
   
 
   ```typescript
-  const selector = createSelector(
+  const selector = createSelector( // 该selector就替代了mapStateToProps
     segmentationsService.selector,
     webhookSettingsService.selector,
     peopleVariablesSelector,
@@ -190,8 +191,9 @@
     })
   );
   ```
+  
 
-
+​	
 
 - :mag_right:  <u>reselect 缓存原理</u>
 
@@ -218,3 +220,12 @@
   ```
 
   
+
+## 引用
+
+- [1] [掘金-redux性能优化 - reselect](https://juejin.cn/post/6844903866354532365#heading-6)
+
+- [2] [reselect源码分析和最佳实践思考](https://github.com/shanggqm/blog/issues/2)
+
+  
+
