@@ -10,9 +10,7 @@
   * [useCallback](#useCallback)
 * [引用](#引用)
 
-<br/>
-
-<br/>
+<br/><br/>
 
 ## 为什么要产生Hooks
 
@@ -31,9 +29,11 @@
 
 <div align='center' ><img src='../../../../assets/images/组合继承疑问.png' height='300px' width='500px'/></div>
 
-
+<br/><br/>
 
 ## 关于Hooks
+
+<br/>
 
 - :wrench: &nbsp;<u>作用</u>：将某个目标结果钩到某个可能会变化的数据源或事件源上，当被钩到的数据或事件发生变化时，产生这个目标结果的代码会重新执行，产生更新后的新结果。**所有的 Hooks 的最终结果都是导致 UI 的变化。**
 
@@ -124,26 +124,32 @@
 
   - 有助于关注分离：Hooks 能够让针对同⼀个业务逻辑的代码尽可能聚合在⼀块⼉。 Class 组件中，不得不把同⼀个业务逻辑的代码分散在不同⽣命周期的⽅法中。
 
-<br/>
-
-<br/>
+<br/><br/>
 
 ## 常用Hooks
 
-
+<br/>
 
 ### useState
+
+<br/>
 
 - :boom:&nbsp;<u>caution</u>：
   - state 不要保存可以通过计算得到的值。如从 props 传进来的需要加工的值，从 url 中读出来的值，从cookie、storage 中读出来的值……，需要的时候再取即可。
   
     因为否则就需要维护源 state 和目标 state 的一致性，会带来各种复杂度。
   
-  - 
+- :question:&nbsp;<u>问题</u>：
+
+  - 函数组件重新执行，useState怎么操作？
+
+    > 破案了！“useState 其实也是能够在组件的多次渲染之间共享数据的，那么在 useRef 的计时器例子中，我们能否用 state 去保存 window.setInterval() 返回的 timer 呢？”
 
 <br/>
 
 ### useEffect
+
+<br/>
 
 ```tsx
 useEffect(callback, dependencies)
@@ -187,7 +193,7 @@ useEffect(callback, dependencies)
     >
     > 2⃣️&nbsp;如果useEffect 有依赖项情况下，则即使该变量更新了也不会执行副作用
   
-  - 在 useEffffect 中使⽤了 setBlogContent 这样⼀个函数，本质上它也是⼀个局部变量，那么这个函数需要被作为依赖项吗？为什么？ 、
+  - 在 useEffffect 中使⽤了 setBlogContent 这样⼀个函数，本质上它也是⼀个局部变量，那么这个函数需要被作为依赖项吗？为什么？ 
   
     > useState 保证了 setBlogContent 每次render时不发生变化。所以不需要作为依赖项
   
@@ -199,12 +205,15 @@ useEffect(callback, dependencies)
 
 ### useCallback
 
-- :cake:&nbsp;<u>背景</u>：函数组件每一次render总是重新执行整个函数。所以一个函数定义总是被重复执行，生成一个新函数。
+<br/>
+
+- :cake:&nbsp;<u>背景</u>：函数组件每一次render总是重新执行整个函数。所以一个函数定义总是被重复执行，生成一个新函数，这种情况下如果函数作为子组件的prop，会导致子组件一直更新*<u>【不做任何处理情况下，父组件重新render(prop、state变化)总是造成子组件更新，在这里指的是子组件使用了React.memo的情况】</u>*。
 
   ```tsx
   const AComponent = ()=>{
     const [age, setAge] = useState(0)
     const handleIncrement = ()=> setAge(age+1) // 每次都生成新函数，而且作为prop传入子组件子组件会重新渲染
+    // 
     return <button onClick={handleIncrement}/>
   }
   ```
@@ -219,13 +228,125 @@ useEffect(callback, dependencies)
 
   
 
-- :wrench:&nbsp;<u>作用</u>：
+- :wrench:&nbsp;<u>作用</u>：只在依赖项更新时，才重新定义函数
+
+- :boom:&nbsp;<u>caution</u>：
+
+  - 如果依赖参数是空数组[]，那么只在组件mounting时执行一次
+
+  - useCallback可以用useMemo实现的
+
+    ```tsx
+    const func = useCallback(()=>setCount(count+1),[count])
+    // 等同于
+    const func = useMemo(()=>{
+      return ()=>setCount(count+1)
+    },[count])
+
+- :question:&nbsp;<u>问题</u>：
+
+  - 对于```const func = useCallback(()=>setCount(count+1),[])```，只定义一次，调用func时count一直是useState时创建的初始值。count是组件函数里的值，它是动态变化的，为什么func里的count一直不变呢？
+  
+    > 破案了！useCallback闭包问题。[参考回答](https://www.cnblogs.com/fe-linjin/p/11402288.html)
+    >
+    > https://juejin.cn/post/6844904062681350157
+  
+  - 那定义一个函数是否都需要使用useCallback包裹呢？
+  
+    > 一般那种作为prop传入子组件的才有必要用useCallback
+
+
 
 <br/>
+
+### useMemo
+
 <br/>
+
+- :cake:&nbsp;<u>场景</u>：一个比较复杂的变量，每次render都需要重新计算来赋值，作为子组件的prop还会造成子组件更新
+
+- :wrench:&nbsp;<u>作用</u>：只有依赖项更新时，才需要重新生成返回值
+
+- :chestnut:&nbsp;<u>例子</u>：
+
+  ```tsx
+  ma中的columns
+  ```
+
+  
+
+<br/>
+
+### useRef
+<br/>
+
+- :cake:&nbsp;<u>场景</u>：函数组件每次render都从头执行一遍，定义的变量也被初始化赋值了，没法在多次渲染间共享
+- :wrench:&nbsp;<u>作用</u>：
+  - 创建一个容器（相当于class组件的this吗？），保存跨渲染数据
+  - 保存一个DOM节点的引用，便于操作改节点
+
+- :chestnut:&nbsp;<u>例子</u>：
+
+  ```tsx
+  // 保存跨渲染数据
+  import React, { useState, useCallback, useRef } from "react";
+  
+  export default function Timer() {
+    const [time, setTime] = useState(0);
+    const timer = useRef(null);
+  
+    const handleStart = useCallback(() => {
+      timer.current = setInterval(() => {
+        setTime((time) => time + 1);
+      }, 100);
+    }, []);
+  
+    const handlePause = useCallback(() => {
+      clearInterval(timer.current);
+      timer.current = null;
+    }, []);
+  
+    return (
+      <div>
+        {time / 10} seconds.
+        <br />
+        <button onClick={handleStart}>Start</button>
+        <button onClick={handlePause}>Pause</button>
+      </div>
+    );
+  }
+  ```
+
+  <br/>
+
+  ```tsx
+  // 保存DOM引用
+  const wrapperRef = useRef(null)
+  ...
+  <div ref={wrapperRef}>
+  	<Select getContainer={()=>wrapperRef.current}/>
+  </div>
+  ```
+
+  
+
+<br/>
+
+### useContext
+
+<br/>
+
+- :wrench:&nbsp;<u>作用</u>：
+
+
+
+<br/><br/>
+
 
 ## 引用
 
 - [1] [ReactHooks核心原理与实战-极客时间-王沛](https://pan.baidu.com/mbox/homepage#share/type=session)
 - [2] [Dan's Blog ](https://overreacted.io/a-complete-guide-to-useeffect/)
+
+- [3] [掘金分享](https://juejin.cn/post/6844903982037467143)
 
