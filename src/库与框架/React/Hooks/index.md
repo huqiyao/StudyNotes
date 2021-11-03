@@ -126,6 +126,18 @@
 
 <br/><br/>
 
+## 闭包陷阱
+
+<br/>
+
+jjjjj
+
+
+
+
+
+<br/><br/>
+
 ## 常用Hooks
 
 <br/>
@@ -152,10 +164,10 @@
 <br/>
 
 ```tsx
-useEffect(callback, dependencies)
+useEffect(fn, dependencies)
 ```
 
-
+<br/>
 
 - :wrench:&nbsp;<u>作用</u>：**每次 render 完后根据依赖项判断是否执行副作用**。(为什么叫副作用？在函数组件的当次执⾏过程中，useEffffect 中代码的执⾏是不影响渲染出来的 UI 的)
 
@@ -207,6 +219,14 @@ useEffect(callback, dependencies)
 
 <br/>
 
+```javascript
+useCallback(fn, dependencies)
+```
+
+
+
+<br/>
+
 - :cake:&nbsp;<u>背景</u>：函数组件每一次render总是重新执行整个函数。所以一个函数定义总是被重复执行，生成一个新函数，这种情况下如果函数作为子组件的prop，会导致子组件一直更新*<u>【不做任何处理情况下，父组件重新render(prop、state变化)总是造成子组件更新，在这里指的是子组件使用了React.memo的情况】</u>*。
 
   ```tsx
@@ -249,8 +269,7 @@ useEffect(callback, dependencies)
   
     > 破案了！useCallback闭包问题。[参考回答](https://www.cnblogs.com/fe-linjin/p/11402288.html)
     >
-    > https://juejin.cn/post/6844904062681350157
-  
+    
   - 那定义一个函数是否都需要使用useCallback包裹呢？
   
     > 一般那种作为prop传入子组件的才有必要用useCallback
@@ -260,6 +279,12 @@ useEffect(callback, dependencies)
 <br/>
 
 ### useMemo
+
+<br/>
+
+```javascript
+useMemo(fn, dependencies)
+```
 
 <br/>
 
@@ -283,8 +308,17 @@ useEffect(callback, dependencies)
 - :cake:&nbsp;<u>场景</u>：函数组件每次render都从头执行一遍，定义的变量也被初始化赋值了，没法在多次渲染间共享
 - :wrench:&nbsp;<u>作用</u>：
   - 创建一个容器（相当于class组件的this吗？），保存跨渲染数据
+  
+  - 解决闭包陷阱
+  
+    ```tsx
+    // 自定义 usePrevious hook
+    ```
+  
+    
+  
   - 保存一个DOM节点的引用，便于操作改节点
-
+  
 - :chestnut:&nbsp;<u>例子</u>：
 
   ```tsx
@@ -328,7 +362,35 @@ useEffect(callback, dependencies)
   </div>
   ```
 
-  
+
+
+
+- :question:&nbsp;<u>问题</u>：
+
+  - 和 createRef 比，其何如？
+
+    > 每次render，createRef 都会返回一个新的引用，而 useRef 每次都会返回相同的引用。
+    >
+    > [掘金demo](https://juejin.cn/post/6844904062681350157)
+    >
+    > ```tsx
+    > const Demo = ()=>{
+    >   const [count, setCount] = useState(0)
+    >   const aUseRef = useState(null)
+    >   const aCreateRef = useState(null)
+    >   if(aUseRef.current === undefined){
+    >     aUseRef.current = count
+    >   }
+    >   if(aCreateRef.current === undefined){
+    >     aCreateRef.current = count
+    >   }
+    >   return <div>
+    >   	<button onClick={()=>setCount(count+1)}></button>
+    >     <span>{aUseRef.current}</span>  {/*一直为0*/}
+    >     <span>{aCreateRef.current}</span> {/*增加ing*/}
+    >   </div>
+    > }
+    > ```
 
 <br/>
 
@@ -336,7 +398,11 @@ useEffect(callback, dependencies)
 
 <br/>
 
-- :wrench:&nbsp;<u>作用</u>：
+- :wrench:&nbsp;<u>作用</u>：获得组件树的值
+
+<br/>
+
+### useReducer
 
 
 
@@ -349,4 +415,8 @@ useEffect(callback, dependencies)
 - [2] [Dan's Blog ](https://overreacted.io/a-complete-guide-to-useeffect/)
 
 - [3] [掘金分享](https://juejin.cn/post/6844903982037467143)
+
+- [4] [官网文档](https://zh-hans.reactjs.org/docs/hooks-reference.html)
+
+- [5] [掘金-闭包陷阱](https://juejin.cn/post/6844904193044512782)
 
