@@ -16,6 +16,8 @@
 
 <br/>
 
+在函数组件中你要思考的方式永远是：当某个状态发生变化时，我要做什么，而不再是在 Class 组件中的某个生命周期方法中我要做什么
+
 - **函数组件更合适。** React 组件的本质就是将 model 渲染成 view ( *<u>UI=render(state, props)</u>* )，使用 class 创建组件不符合这样的思想，而且有些大材小用，因为class的一些特性完全没被利用：
   - 组件之间不是继承关系，未用到class类的继承特性
   - 组件不需要在外部调用那些实例方法
@@ -127,6 +129,10 @@
 <br/><br/>
 
 ## 闭包陷阱
+
+[闭包笔记](../../../ECMAScript/闭包.md)
+
+[掘金讲解](https://juejin.cn/post/6844904006079217672)
 
 <br/>
 
@@ -265,9 +271,27 @@ useCallback(fn, dependencies)
 
 - :question:&nbsp;<u>问题</u>：
 
-  - 对于```const func = useCallback(()=>setCount(count+1),[])```，只定义一次，调用func时count一直是useState时创建的初始值。count是组件函数里的值，它是动态变化的，为什么func里的count一直不变呢？
+  - 对于```const handle = useCallback(()=>setCount(count+1),[])```，调用handle时count一直是useState时创建的初始值。count是组件函数里的值，它是动态变化的，为什么func里的count一直不变呢？
   
-    > 破案了！useCallback闭包问题。[参考回答](https://www.cnblogs.com/fe-linjin/p/11402288.html)
+    > ```tsx
+    > const App = ()=>{
+    >   const [count, setCount] = useState(0)
+    >   const handle = useCallback(()=>{
+    >     console.log(count)
+    >   },[])
+    >   return 
+    >   <div>
+    >   	<button onClick={()=>setCount(count+1)}></button>
+    >     <button onClick={handle}></button>
+    >   </div>
+    > }
+    > App()
+    > // handle的闭包[{count:1}],
+    > // 点击button1，促使render
+    > App()
+    > ```
+    >
+    > 
     >
     
   - 那定义一个函数是否都需要使用useCallback包裹呢？
@@ -403,6 +427,36 @@ useMemo(fn, dependencies)
 <br/>
 
 ### useReducer
+
+
+
+<br/><br/>
+
+## 构造一次性执行代码
+
+<br/>
+
+```tsx
+const useSingleton = (callback)=>{
+  const called = useRef(false) // called:{ current: false}
+  if(called.current){
+    return
+  }
+  callback()
+  called.current = true
+}
+
+const Demo = ()=>{
+  useSingleton(()=>{ // 调用的位置决定了什么时候执行
+    console.log('执行一次')
+  })
+}
+```
+
+
+
+
+
 
 
 
