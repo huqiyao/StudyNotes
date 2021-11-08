@@ -8,7 +8,16 @@
   * [useState](#useState)
   * [useEffect](#useEffect)
   * [useCallback](#useCallback)
+  * [useMemo](#useMemo)
+  * [useRef](useRef)
+  * useContext
+  * useReducer
+* [自定义Hooks](#自定义Hooks)
+* [构造一次性执行代码](#构造一次性执行代码)
+* [class组件和函数组件共存问题](#class组件和函数组件共存问题)
 * [引用](#引用)
+
+
 
 <br/><br/>
 
@@ -187,7 +196,7 @@ useEffect(fn, dependencies)
 
     dependencies 是包含指定值的数组，则只在指定值变化后才执行，即相当于 **componentDidUpdate**；**但是第一次mount，即componentDidMount也会执行**。
 
-  - 在 useEffect 中 return 一个匿名函数，则相当于 **componentWillUnMount**
+  - 在 useEffect 中返回一个清除函数，在下一次依赖项发生变化时（即下一次副作用callback执行前，目的是清理上一次副作用）及组件卸载前（componentWillUnmount）执行。场景：setTimeout和clearTimeout、监听和取消监听等。
 
   - 对依赖项的监听，是一种**浅比较**(===)。
 
@@ -200,7 +209,7 @@ useEffect(fn, dependencies)
   
     
   
-  - 依赖项目需要在callback中用到，否则无意义。<span style='color:red'>如果依赖项未被用到，但是作为flag来控制副作用执行呢</span>
+  - 在callback中用到的属性需要在写在依赖项中，否则无意义。而且由于闭包的原因可能无法得到预期结果。<span style='color:red'>如果依赖项未被用到，但是作为flag来控制副作用执行呢</span>
 
 
 
@@ -215,6 +224,14 @@ useEffect(fn, dependencies)
   
     > useState 保证了 setBlogContent 每次render时不发生变化。所以不需要作为依赖项
   
+  - 如何实现componentWillUnmount的效果
+  
+    > 依赖项为空数组，然后再写清除函数
+    
+  - ```useEffect(()=>{},[])```，执行副作用是在render完成后执行的，如果某些方法想在执行时只执行一次呢？
+  
+    > 如下，利用useRef[构造一次性执行代码](#构造一次性执行代码)
+    
   - 如何让副作用只在依赖变化后执行
   
     <div align='center' ><img src='../../../../assets/images/useEffect-componentDidUpdate.png' height='500px' width='500px'/></div>
@@ -432,6 +449,107 @@ useMemo(fn, dependencies)
 
 <br/><br/>
 
+## 自定义Hooks
+
+<br/>
+
+- :triangular_flag_on_post:&nbsp;特征：use开头、内部使用了其他hooks
+
+- :chestnut:&nbsp;例子：
+
+  - **抽取业务逻辑**：计数器
+
+    ```tsx
+    const useCounter = ()=>{
+      const [count, setCount] = useState(0);
+      const increment = useCallback(() => setCount(count + 1), [count]);
+      const decrement = useCallback(() => setCount(count - 1), [count]);
+      const reset = useCallback(() => setCount(0), []);
+      return { count, increment, decrement, reset };
+    }
+
+  - **封装通用逻辑**：异步获取数据
+
+    ```tsx
+    const useAsync = (asyncFunc)=>{
+      const [error, setError] = useState(null)
+      const [data, setData] = useState(null)
+      const [loading, setLoading] = useState(false)
+      const execute = useCallback(()=>{
+        setLoading(true)
+        // setData、setError
+        return asyncFunc().then((data)=>{ // 因为没有返回需要处理的数据，其实不return也可以
+          setData(data)
+          setLoading(false)
+        }).catch((err)=>{
+          setError(err)
+          setLoading(false)
+        })
+      },[asyncFunc])
+    }
+    // 使用
+    const {error, data, loading, execute} = useAsync(useCallback(async ()=>{
+      const res = await fetch('/project/messages/getAll')
+      const json = await res.json()
+      return json.data()
+    },[]))
+
+  - **监听浏览器状态**：获得滚动条位置
+
+    ```tsx
+    const getPosition = ()=>{
+      return {
+        x: document.body.scrollLeft,
+        y: document.body.scrollTop
+      }
+    }
+    const useScroll = ()=>{
+      const [position, setPosition] = useState(getPosition())
+      useEffect(()=>{
+        const handler = ()=> setPosition(getPosition(document)) // 为什么传入document
+        document.addEventListener("scroll", handler)
+        return ()=>{
+          document.removeEventListener("scroll", handler)
+        }
+      },[])
+      return position
+    }
+    // 回到顶部组件，使用
+    const { y } = useScroll() 
+    const toTop = useCallback(()=>{
+      document.body.scrollTop = 0;
+    },[])
+    if(y > 300){
+      return <button onClick={toTop}>回到顶部</button>
+    }
+    return null
+
+  - **拆分复杂组件。**Hooks就像普通函数一样，可以使用自定义hooks来隔离业务代码，然后在函数组件里直接使用hooks以避免组件太长。
+
+    ```tsx
+    // 获得文章
+    const useArticle = ()=>{
+      const {error, data, loading, execute} = useAsync(useCallback(async ()=>{
+      	const res = await fetch('/project/messages/getAll')
+      	const json = await res.json() // res.json是个promise，所以需要await
+      	return json.data()
+    	},[]))
+      useEffect(()=>{
+        execute()
+      },[execute])
+      return {
+        article: data, 
+        articlesLoading: loading,    
+        articlesError: error}
+    }
+    // 获得评论同理
+    const useComment = ()=>{}
+    ```
+    
+    
+
+<br/><br/>
+
 ## 构造一次性执行代码
 
 <br/>
@@ -453,6 +571,14 @@ const Demo = ()=>{
 }
 ```
 
+<br/>
+
+- :question:&nbsp;问题：多次使用useSingleton，产生多个useRef怎么办
+
+<br/><br/>
+## class组件和函数组件共存问题
+
+https://zhuanlan.zhihu.com/p/98554943
 
 
 
