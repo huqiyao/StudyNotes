@@ -9,11 +9,15 @@
   * [useEffect](#useEffect)
   * [useCallback](#useCallback)
   * [useMemo](#useMemo)
-  * [useRef](useRef)
+  * [useRef](#useRef)
   * useContext
   * useReducer
 * [自定义Hooks](#自定义Hooks)
 * [构造一次性执行代码](#构造一次性执行代码)
+* [保证状态一致性](#保证状态一致性)
+  * [state最小化](#state最小化)
+  * [避免中间状态，确保唯一数据源](#避免中间状态，确保唯一数据源)
+
 * [class组件和函数组件共存问题](#class组件和函数组件共存问题)
 * [引用](#引用)
 
@@ -220,11 +224,11 @@ useEffect(fn, dependencies)
     >
     > 2⃣️&nbsp;如果useEffect 有依赖项情况下，则即使该变量更新了也不会执行副作用
   
-  - 在 useEffffect 中使⽤了 setBlogContent 这样⼀个函数，本质上它也是⼀个局部变量，那么这个函数需要被作为依赖项吗？为什么？ 
+  - 在 useEffffect 中使⽤了 setXX 这样⼀个函数，本质上它也是⼀个局部变量，那么这个函数需要被作为依赖项吗？为什么？ 
   
-    > useState 保证了 setBlogContent 每次render时不发生变化。所以不需要作为依赖项
+    > useState 保证了 setXX 每次render时不发生变化。所以不需要作为依赖项
   
-  - 如何实现componentWillUnmount的效果
+  - 如何实现componentWillUnmount的效果呢？
   
     > 依赖项为空数组，然后再写清除函数
     
@@ -234,7 +238,18 @@ useEffect(fn, dependencies)
     
   - 如何让副作用只在依赖变化后执行
   
-    <div align='center' ><img src='../../../../assets/images/useEffect-componentDidUpdate.png' height='500px' width='500px'/></div>
+    > ```tsx
+    > const isMounted = useRef(false)
+    > useEffect(()=>{
+    >   if(!isMounted.current){
+    >     isMounted.curent = true
+    >     return
+    >   }
+    >   doSomething() // 执行副作用
+    > },[dep])
+    > ```
+    
+    
 
 <br/>
 
@@ -288,8 +303,8 @@ useCallback(fn, dependencies)
 
 - :question:&nbsp;<u>问题</u>：
 
-  - 对于```const handle = useCallback(()=>setCount(count+1),[])```，调用handle时count一直是useState时创建的初始值。count是组件函数里的值，它是动态变化的，为什么func里的count一直不变呢？
-  
+  - 对于```const handle = useCallback(()=>setCount(count+1),[])```，调用 handle时 coun t一直是 useState 时创建的初始值。count 是组件函数里的值，它是动态变化的，为什么 func 里的 count一直不变呢？
+    > 破案啦。闭包 + 函数多次执行
     > ```tsx
     > const App = ()=>{
     >   const [count, setCount] = useState(0)
@@ -307,8 +322,6 @@ useCallback(fn, dependencies)
     > // 点击button1，促使render
     > App()
     > ```
-    >
-    > 
     >
     
   - 那定义一个函数是否都需要使用useCallback包裹呢？
@@ -524,14 +537,15 @@ useMemo(fn, dependencies)
     }
     return null
 
-  - **拆分复杂组件。**Hooks就像普通函数一样，可以使用自定义hooks来隔离业务代码，然后在函数组件里直接使用hooks以避免组件太长。
+  - **拆分复杂组件**。Hooks就像普通函数一样，可以使用自定义hooks来隔离业务代码，然后在函数组件里直接使用hooks以避免组件太长。
 
     ```tsx
     // 获得文章
     const useArticle = ()=>{
       const {error, data, loading, execute} = useAsync(useCallback(async ()=>{
       	const res = await fetch('/project/messages/getAll')
-      	const json = await res.json() // res.json是个promise，所以需要await
+        // res.json是个promise，所以需要await
+      	const json = await res.json() 
       	return json.data()
     	},[]))
       useEffect(()=>{
@@ -555,7 +569,7 @@ useMemo(fn, dependencies)
 <br/>
 
 ```tsx
-const useSingleton = (callback)=>{
+const useOnce = (callback)=>{
   const called = useRef(false) // called:{ current: false}
   if(called.current){
     return
@@ -565,7 +579,7 @@ const useSingleton = (callback)=>{
 }
 
 const Demo = ()=>{
-  useSingleton(()=>{ // 调用的位置决定了什么时候执行
+  useOnce(()=>{ // 调用的位置决定了什么时候执行
     console.log('执行一次')
   })
 }
@@ -576,12 +590,110 @@ const Demo = ()=>{
 - :question:&nbsp;问题：多次使用useSingleton，产生多个useRef怎么办
 
 <br/><br/>
+
 ## class组件和函数组件共存问题
 
 https://zhuanlan.zhihu.com/p/98554943
 
 
 
+<br/><br/>
+
+## 保证状态一致性
+
+<br/>
+
+### state最小化
+
+<br/>
+
+某些数据能从state、prop中计算得到，那么就在使用时去计算，而不要存在state里面。
+
+- :chestnut:&nbsp;例子：
+  - 搜索框+列表
+  
+    ```tsx
+    // 三个状态：列表数据prop、输入框关键字state、搜索结果
+    // 不用维护搜索结果
+    const Demo = ({data})=>{
+      const [searchKey, setSearchKey] = useState('')
+      const filtered = useMemo(()=>{
+        return data.filter(item=>{
+          return item.title.toLowerCase().includes(searchKey.toLowerCase())
+        })
+      },[data, searchKey])
+      const handleSearchChange = useCallback(evt=>{
+        const key = evt.target.value
+        setSearchKey(key)
+      })
+    }
+    ```
+    
+    
+
+<br/>
+
+### 避免中间状态，确保唯一数据源
+
+<br/>
+
+<div align='center'><img src='../../../../assets/images/唯一数据源.png'/></div>
+
+- :chestnut:&nbsp;<u>例子</u>：
+
+  - 搜索框+列表+搜索关键字同步在浏览器url中
+
+    ```tsx
+    import getQuery from './getQuery'
+    import history from './history'
+    const Demo = ({data})=>{
+      // 初始化时关键字从url的query中取
+      const [searchKey, setSearchKey] = useState(getQuery('key'))
+      const filtered = useMemo(()=>{
+        return data.filter(item=>{
+          return item.title.toLowerCase().includes(searchKey.toLowerCase())
+        })
+      },[data, searchKey])
+      const handleSearchChange = useCallback(evt=>{
+        const key = evt.target.value
+        setSearchKey(key)
+        // 当搜索框输入变化时，不仅要更新关键字state，还要改变url的query
+        history.push(`/list?key=${key}`)
+      })
+    }
+    /**
+    * 一致性问题漏洞：从url的query中获得关键字state只在第一次mounting时发生，后续由onchange维持一致
+    * 而中途如果其他原因导致url的query变化，关键字state不会变，一致性被破坏
+    */
+    // 上述，数据源有两个：用户输入 + 浏览器url的query
+    // 将url的query作为唯一数据源
+    import { useSearchParam } from "react-use";
+    const Demo = ({data})=>{
+      const searchKey = useSearchParam("key") || ""
+      const handleSearch = useCallback(evt=>{
+        window.history.pushState(
+          {},
+          '',
+          `${window.location.pathname}?key=${evt.target.value}`
+        )
+      })
+      ......
+    }
+    ```
+
+    :question:&nbsp;<u>问题</u>：
+
+    - 为什么使用 ```useSearchParam``` 这个hook？这个hook内部是如何实现的？
+
+      > 由于 hisgory.pushState 不会触发⻚⾯重新渲染，也不会导致组件更新，所以，默认的 userSearchParam 
+      >
+      > s 只会获取第⼀次的 URL 上的查询字符串。因此，为了解决这个问题，可以通过监听 pushstate、replac 
+      >
+      > eState 等事件，对状态进⾏同步。 
+      >
+      >  history API 是⽐较特别的，只能⽤ patch 的⽅法来监听 url 变化。
+
+    
 
 
 
@@ -593,10 +705,8 @@ https://zhuanlan.zhihu.com/p/98554943
 
 - [1] [ReactHooks核心原理与实战-极客时间-王沛](https://pan.baidu.com/mbox/homepage#share/type=session)
 - [2] [Dan's Blog ](https://overreacted.io/a-complete-guide-to-useeffect/)
-
 - [3] [掘金分享](https://juejin.cn/post/6844903982037467143)
-
 - [4] [官网文档](https://zh-hans.reactjs.org/docs/hooks-reference.html)
-
 - [5] [掘金-闭包陷阱](https://juejin.cn/post/6844904193044512782)
+- [6] [从源码角度解读“跨渲染”](https://juejin.cn/post/6844904006079217672)
 

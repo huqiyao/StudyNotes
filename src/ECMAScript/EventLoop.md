@@ -53,3 +53,5 @@ process.nextTick(Node.js 环境)
 - [3] [执行栈图解](https://siddharthac6.medium.com/javascript-execution-of-synchronous-and-asynchronous-codes-40f3a199e687)
 - [4] [图解EventLoop](https://juejin.cn/post/6844904004745592846)
 
+- [5] [await到底做了什么](https://segmentfault.com/q/1010000016147496)
+
