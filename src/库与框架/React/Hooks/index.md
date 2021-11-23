@@ -17,6 +17,16 @@
 * [保证状态一致性](#保证状态一致性)
   * [state最小化](#state最小化)
   * [避免中间状态，确保唯一数据源](#避免中间状态，确保唯一数据源)
+* [向服务器端发送请求](#向服务器端发送请求)
+  * [封装自定义Hooks](#封装自定义Hooks)
+  * [多个API调用如何处理并发/串行请求](#多个API调用如何处理并发/串行请求)
+* [函数组件设计模式：复杂条件渲染场景](#函数组件设计模式：复杂条件渲染场景)
+  * [容器模式：按条件执行Hooks](#容器模式：按条件执行Hooks)
+  * [使用render props 模式重用 UI 逻辑](#使用render props 模式重用 UI 逻辑)
+* [事件处理：创建自定义事件](#事件处理：创建自定义事件)
+  * [原生事件](#原生事件)
+  * [自定义事件](#自定义事件)
+
 
 * [class组件和函数组件共存问题](#class组件和函数组件共存问题)
 * [引用](#引用)
@@ -535,7 +545,7 @@ useMemo(fn, dependencies)
     if(y > 300){
       return <button onClick={toTop}>回到顶部</button>
     }
-    return null
+    return null;
 
   - **拆分复杂组件**。Hooks就像普通函数一样，可以使用自定义hooks来隔离业务代码，然后在函数组件里直接使用hooks以避免组件太长。
 
@@ -694,6 +704,246 @@ https://zhuanlan.zhihu.com/p/98554943
       >  history API 是⽐较特别的，只能⽤ patch 的⽅法来监听 url 变化。
 
     
+
+<br/>
+
+<br/>
+
+## 向服务器端发送请求
+
+<br/>
+
+### [封装自定义Hooks](#自定义Hooks)
+
+<br/>
+
+### 多个API调用如何处理并发/串行请求
+
+<br/>
+
+React的本质是状态驱动UI，所以当状态变化时触发请求。
+
+<br/>
+
+- :chestnut:&nbsp;<u>例子</u>：
+
+  - （article id）评论列表并发请求、文章内容&nbsp;:point_right: <br/>（writer id）作者信息串行请求
+
+    思路：
+
+    ```tsx
+    // 并发获取⽂章和评论列表 
+    const [article, comments] = await Promise.all([ fetchArticle(articleId), fetchComments(articleId) ]); 
+    // 得到⽂章信息后，通过 writerId 获取⽤⼾信息 
+    const user = await fetchUser(article.userId);
+    ```
+
+    但是！！React函数组件是个同步的函数，没办法直接使用await。请求需要通过副作用触发：
+
+    ```tsx
+    // 自定义Hooks useUser
+    export default (id)=>{
+      const [data, setData] = useState(null)
+      const [loading,setLoading] = useState(false)
+      const [error, setError] = useState(null)
+      useEffect(()=>{
+        if(!id) return // 只有有id时才会发请求
+        setLoading(true)
+        setData(null)
+        setError(false)
+        fetch(`/users/${id}`).then(res=>{
+          setLoading(false)
+          setData(res)
+        }).catch(err=>{
+          setLoading(false)
+          setError(err)
+        })
+      },[id])
+      return {loading, data, error}
+    }
+    // 自定义Hooks useArticle
+    // useComment 同理
+    export default (id)=>{
+      const [data, setData] = useState(null)
+      const [loading,setLoading] = useState(false)
+      const [error, setError] = useState(null)
+      useEffect(()=>{
+        setLoading(true)
+        setData(null)
+        setError(false)
+        fetch(`/articles/${id}`).then(res=>{
+          setLoading(false)
+          setData(res)
+        }).catch(err=>{
+          setLoading(false)
+          setError(err)
+        })
+      },[id])
+      return {loading, data, error}
+    }
+    // 组件内使用
+    const Demo = (id)=>{
+      const { data: article, error, loading } = useArticle(id)
+      const { data: comments } = useComment(id)
+      const { data: user } = useUser(article?.userId)
+      if (error) return 'failed'
+      if (!article || loading) return 'loading'
+      return ......
+    }
+    ```
+    
+    
+
+<br/><br/>
+
+## 函数组件设计模式：复杂条件渲染场景
+
+<br/>
+
+### 容器模式：按条件执行Hooks
+
+<br/>
+
+- :cake:&nbsp;<u>场景</u>：
+
+  Hooks 在 if()...return... 之后使用会报错。因为**Hooks必须被执行到**。
+
+  ```tsx
+  const UserInfoModal = ({ visible, userId, ...rest })=>{ 
+    // 当 visible 为 false 时，不渲染任何内容 
+    if (!visible) return null
+    // 这⼀⾏ Hook 在可能的 return 之后，会报错！ 
+    const { data, loading, error } = useUser(userId)
+    return ( <Modal visible={visible} {...rest}>xxx</Modal> ) }
+  ```
+
+- :white_check_mark:  <u>solution</u>：
+
+  - 将条件判断放在外层容器中
+  - 在自定义Hooks中处理
+  
+- :chestnut:&nbsp;<u>例子</u>：
+
+  ```tsx
+  // 将条件判断放在外层容器中
+  // 适用于大块的逻辑，如子组件显示与否
+  const UserInforModalWrapper = ({visible, ...rest})=>{
+    if(!visible) return null
+    return <UserInfoModal {...rest}/> // 子组件内部不用判断了
+  }
+  ```
+
+  :question:&nbsp;问题：这种方式会丧失Modal的动画效果（即Modal的visible值的变化false）
+
+  <br/>
+
+  ```tsx
+  // 自定义Hooks
+  // 适用于内部小逻辑
+  const ArticleView = ({ id }) => { 
+    const { data: article, loading } = useArticle(id); 
+    let user = null; 
+    if (article?.userId) user = useUser(article?.userId).data; 
+    ......
+  }
+  /**
+  * 解决方案：发送串行请求课题中的useUser自定义Hook
+  */
+  function useUser(id) { 
+    const [data, setData] = useState(null)
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState(null) 
+    useEffect(() => {
+      if (!id) return 
+      ......
+    })
+  }
+  ```
+
+  
+
+<br/>
+
+### 使用render props 模式重用 UI 逻辑
+
+<br/>
+
+- :cake:&nbsp;<u>场景</u>：Hooks 只能用作数据逻辑的重用，如何进行UI逻辑重用？
+
+  - 文件预览，根据选中的文件类型用对应的插件预览。
+
+- :white_check_mark:&nbsp;<u>solution</u>：借助 render props 模式，将 render 函数作为属性传递给某组件，由组件执行该函数render实际内容。
+
+- :chestnut:&nbsp;<u>例子</u>：
+
+  **通过 children 这个特殊的 prop 传函数**
+
+  ```tsx
+  const CounterRenderProps = ({children}) => {
+    const [count, setCount] = useState(0)
+    const increment = useCallback(()=>{
+      setCount(count+1)
+    },[count])
+    const decrement = useCallback(()=>{
+      setCount(count-1)
+    },[count])
+    return children({count, increment, decrment})
+  }
+  // 使用
+  const Demo = ()=>{
+    return 
+    <CountRenderProps>
+      {(count, increment, decrment)=>{
+        return
+        <div>
+          <button onClick={increment}>+1</button>
+          <span>{count}<span/>
+          <button onClick={decrement}>-1</button>
+        </div>
+      }}
+    </CountRenderProps>
+  }
+  ```
+
+  <br/>
+
+  **通过普通的 prop 传函数**
+
+  ```tsx
+  // 5行的list + 显示更多 
+  // 5个span + 显示更多
+  const ListWithMore = ({renderItem, datas=[], max})=>{
+    const elements = datas.map((data,index)=>renderItem(data, index, datas))
+    const show = elements.slice(0,max)
+    const hide = elements.slice(max)
+    return 
+    <>
+    	{show}
+    	{hide.length > 0 && 
+      	<Popover content={<div>{hide}</div>}>
+         <span>查看更多</span>
+       	</Popover>
+      }
+    </>
+  }
+  // 使用
+  <ListWithMore renderItem={(item)=><span>{item.name}</span>}{...rest}></ListWithMore>
+  ```
+
+  
+
+<br/><br/>
+
+## 事件处理：创建自定义事件
+
+<br/>
+
+### 原生事件
+
+
+
+
+
 
 
 
