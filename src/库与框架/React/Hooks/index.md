@@ -16,14 +16,14 @@
 * [构造一次性执行代码](#构造一次性执行代码)
 * [保证状态一致性](#保证状态一致性)
   * [state最小化](#state最小化)
-  * [避免中间状态，确保唯一数据源](#避免中间状态，确保唯一数据源)
+  * [避免中间状态,确保唯一数据源](#避免中间状态,确保唯一数据源)
 * [向服务器端发送请求](#向服务器端发送请求)
   * [封装自定义Hooks](#封装自定义Hooks)
-  * [多个API调用如何处理并发/串行请求](#多个API调用如何处理并发/串行请求)
-* [函数组件设计模式：复杂条件渲染场景](#函数组件设计模式：复杂条件渲染场景)
-  * [容器模式：按条件执行Hooks](#容器模式：按条件执行Hooks)
-  * [使用render props 模式重用 UI 逻辑](#使用render props 模式重用 UI 逻辑)
-* [事件处理：创建自定义事件](#事件处理：创建自定义事件)
+  * [多个API调用如何处理并发串行请求](#多个API调用如何处理并发串行请求)
+* [函数组件设计模式:复杂条件渲染场景](#函数组件设计模式：复杂条件渲染场景)
+  * [容器模式:按条件执行Hooks](#容器模式:按条件执行Hooks)
+  * [使用```render props```模式重用UI逻辑](#使用```render props```模式重用UI逻辑)
+* [事件处理:创建自定义事件](#事件处理:创建自定义事件)
   * [原生事件](#原生事件)
   * [自定义事件](#自定义事件)
 
@@ -476,9 +476,9 @@ useMemo(fn, dependencies)
 
 <br/>
 
-- :triangular_flag_on_post:&nbsp;特征：use开头、内部使用了其他hooks
+- :triangular_flag_on_post:&nbsp;<u>特征</u>：use开头、内部使用了其他hooks
 
-- :chestnut:&nbsp;例子：
+- :chestnut:&nbsp;<u>例子</u>：
 
   - **抽取业务逻辑**：计数器
 
@@ -643,7 +643,7 @@ https://zhuanlan.zhihu.com/p/98554943
 
 <br/>
 
-### 避免中间状态，确保唯一数据源
+### 避免中间状态,确保唯一数据源
 
 <br/>
 
@@ -717,7 +717,7 @@ https://zhuanlan.zhihu.com/p/98554943
 
 <br/>
 
-### 多个API调用如何处理并发/串行请求
+### 多个API调用如何处理并发串行请求
 
 <br/>
 
@@ -796,11 +796,11 @@ React的本质是状态驱动UI，所以当状态变化时触发请求。
 
 <br/><br/>
 
-## 函数组件设计模式：复杂条件渲染场景
+## 函数组件设计模式:复杂条件渲染场景
 
 <br/>
 
-### 容器模式：按条件执行Hooks
+### 容器模式:按条件执行Hooks
 
 <br/>
 
@@ -864,7 +864,7 @@ React的本质是状态驱动UI，所以当状态变化时触发请求。
 
 <br/>
 
-### 使用render props 模式重用 UI 逻辑
+### 使用```render props```模式重用UI逻辑
 
 <br/>
 
@@ -934,11 +934,84 @@ React的本质是状态驱动UI，所以当状态变化时触发请求。
 
 <br/><br/>
 
-## 事件处理：创建自定义事件
+## 事件处理
 
 <br/>
 
-### 原生事件
+
+
+### React原生事件
+
+<br/>
+
+React中，无论是原生DOM节点还是组件节点上绑定的，实际上所有原生事件处理函数都绑定在App根节点上的（*React 17 以前，绑定在document上*）。
+
+由React统一监听、管理，捕获事件后再分发到具体的虚拟DOM节点上。
+
+<br/>
+
+- :boom:&nbsp;<u>caution</u>：
+  - 原生事件和自定义事件的机制完全不一样，原生事件是浏览器的机制，而自定义事件是组件自己的行为，本质是回调函数机制
+
+- :question:&nbsp;<u>问题</u>：
+
+  - 为什么要绑在根节点上？
+
+    > 1⃣️ 虚拟DOM render 时，真实DOM 未 render 到页面上，所以无法绑定事件
+    >
+    > 2⃣️ React 屏蔽底层事件细节，避免浏览器兼容性问题。对于React Native这种不是通过浏览器render的，能提供一致的API。
+
+  - 为什么事件处理函数绑定在根节点上，实际真实DOM节点上事件发生时，也能触发函数执行？
+
+    > [浏览器事件冒泡模型](??) + react根据事件的srcElement属性知道哪个节点发出
+
+
+
+<br/>
+
+### 自定义事件
+
+<br/>
+
+
+
+- :boom:&nbsp;<u>caution</u>：
+  - 关于如何理解自定义事件，组件内部调用prop中的onXxx的时机xxx就是一种自定义事件。
+
+
+
+<br/>
+
+### 使用Hooks避免绑定事件
+
+<br/>
+
+```tsx
+const usekey = (node)=>{
+  const [key, setKey] = useState(null);
+  useEffect(()=>{
+    const handleKey = evt => {
+      setKey(evt.keyCode)
+    }
+    node.addEventListener('keypress', handleKey)
+    return ()=>{
+      node.removeEventListener('keypress')
+    }
+  },[node])
+}
+```
+
+
+
+<br/><br/>
+
+## Hooks与表单
+
+
+
+
+
+
 
 
 
