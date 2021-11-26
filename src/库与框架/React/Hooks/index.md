@@ -940,7 +940,7 @@ React的本质是状态驱动UI，所以当状态变化时触发请求。
 
 
 
-### React原生事件
+### React与原生事件
 
 <br/>
 
@@ -1007,13 +1007,111 @@ const usekey = (node)=>{
 
 ## Hooks与表单
 
+<br/>
+
+### 受控与非受控
+
+<br/>
+
+受控组件有重新渲染问题，而非受控组件输⼊过程没有对应的状态变化，因此无法动态地根据⽤⼾输⼊做 UI 上的调整 。所以：**一般都是使用受控组件的**
+
+- 受控：值由父组件传入
+
+  ```tsx
+  function MyForm() { 
+    const [value, setValue] = useState('')
+    const handleChange = useCallback(evt ={
+      setValue(evt.target.value)}, [])
+    return <input value={value} onChange={handleChange} />
+  }
+  ```
+
+- 非受控：值由组件自己决定
+
+  ```tsx
+  function MyForm() { 
+    const inputRef = useRef(); 
+    const handleSubmit = (evt) =>{
+      evt.preventDefault(); 
+      // 使⽤的时候直接从 input 节点获取值
+      alert("Name: " + inputRef.current.value)
+    }
+    return ( 
+      <form onSubmit={handleSubmit}> 
+        <label> Name: <input type="text" ref={inputRef} /> </label>
+        <input type="submit" value="Submit" /> 
+      </form> )
+  }
+  ```
+
+<br/>
+
+### Hooks简化表单元素处理
+
+<br/>
+
+- :cake:&nbsp;<u>场景</u>：其实表单元素处理就是：```const [value, setValue] = useState(); <input onChange={setValue}/>```。元素数量增加，这个逻辑会重复很多次。
+
+- :white_check_mark:&nbsp;<u>solution</u>：
+
+  将上述逻辑封装成自定义Hook
+
+  ```tsx
+  const useForm = (initValues={})=>{
+    const [values, setValues] = useState(initValues)
+    const setFieldValue = useCallback((name, value)=>{
+      setValues(values=>({
+        ...values,
+        [name]:value
+      }))
+    },[])
+    return {values, setFieldValue}
+  }
+  // 使用
+  const {values, setFieldValue} = useForm()
+  <input value={values.name} onChange={evt=>{setFieldValue('name',evt.target.value)}}/>
+  <input value={values.age} onChange={evt=>{setFieldValue('age',evt.target.value)}}/>
+  ```
+
+  加上表单验证
+
+  ```tsx
+  const useForm = (initValues={}, validators)=>{
+    const [values, setValues] = useState(initValues)
+    const setFieldValue = useCallback((name, value)=>{
+      setValues(values=>({
+        ...values,
+        [name]:value
+      }))
+      if (validators[name]) { 
+        const errMsg = validators[name](value); 
+        setErrors((errors) =>({
+          ...errors, 
+          [name]: errMsg || null, })); }
+    },[])
+    return {values, setFieldValue, errors}
+  }
+  ```
+
+- :question:&nbsp;<u>问题</u>：
+
+  - 想要reset功能，如何加上
+  - 如何支持异步验证（如：通过服务器端 API 判断 name 是否已存在）
+  - antdesign 这些框架是如何实现Form的？（antdesign 原先使用高阶组件后来用了Hooks。Formik用了render props。React Hook Form 完全基于Hooks实现，且与前面的不同，他是非受控组件方式）
 
 
 
+<br/><br/>
 
+## 浮动层
 
+<br/>
 
+- :cake:&nbsp;<u>场景</u>：
 
+  并列的两个部分，控制同一个modal的展示与否
+
+  <div align='center'><img src='../../../../assets/images/浮动层case.jpg'/></div>
 
 
 
