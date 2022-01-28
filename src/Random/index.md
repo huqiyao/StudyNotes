@@ -1,4 +1,38 @@
-# Case 1
+# week2
+
+## 1 
+
+Branch-A：
+
+- 写了 *<u>新内容 X</u>* 并 push **( commit A1 )**，发现有个隐藏的bug
+- ```git revert HEAD``` 并 push**( commit 2 )**
+- 改分支被合进 master 了
+
+Branch-B
+
+- ```git checkout -b B ``` 新切分支
+- 想要将 *<u>新内容 X</u>* 移到该分支进行修改，怎么办呢？
+- ```git cherry-pick A1``` 将写了*<u>新内容 X</u>* 的 commit 移过来就可以啦！
+
+**第一次使用 cherry-pick ，感觉很棒** 
+
+
+
+## 2
+
+react-beautiful-dnd 使用问题：
+
+- react-beautiful-dnd 不支持 drag 事件发生后，产生source item 的copy，而是直接把 source item 给拉走了。
+
+  现在的解决方案是：添加一个长得和 source item一样的 placeholder。在 source item dragging 状态下出现。但是过渡得不自然。
+
+- move操作，因为服务器端响应数据是异步的，没有立刻触发resort操作，所以source item 会先返回原位置。
+
+
+
+# week 1
+
+## 1
 
 <div align='center'> <img width='200px' height='300px' src='../../assets/images/week1-editor-column.jpg'/></div>
 
@@ -68,8 +102,11 @@ const Columns: React.FC<{}> = () => {
 
 
 
-# Case 2
+## 2
 
 <div align='center'> <img width='400px' height='400px' src='../../assets/images/week1-editor-classname.jpg'/></div>
 
  如果再嵌套几个div，我就词穷了，我要找个命名的新思路
+
+
+
