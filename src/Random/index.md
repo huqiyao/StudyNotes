@@ -28,6 +28,8 @@ react-beautiful-dnd 使用问题：
 
 - move操作，因为服务器端响应数据是异步的，没有立刻触发resort操作，所以source item 会先返回原位置。
 
+  或许可以试试维护一个额外的block state ??
+
 
 
 # week 1
